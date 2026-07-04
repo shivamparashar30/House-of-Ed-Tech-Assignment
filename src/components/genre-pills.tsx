@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View } from 'react-native';
 import { Chip } from 'react-native-paper';
 
@@ -8,7 +9,7 @@ interface GenrePillsProps {
   genres: Genre[];
 }
 
-export function GenrePills({ genres }: GenrePillsProps) {
+export const GenrePills = memo(function GenrePills({ genres }: GenrePillsProps) {
   const Colors = useThemeColors();
   if (genres.length === 0) return null;
 
@@ -20,10 +21,10 @@ export function GenrePills({ genres }: GenrePillsProps) {
           mode="outlined"
           compact
           textStyle={{ fontSize: 11, fontWeight: '500', color: Colors.textSecondary }}
-          style={{ backgroundColor: Colors.elevated, borderColor: '#2A2A2A', height: 28 }}>
+          style={{ backgroundColor: Colors.elevated, borderColor: Colors.border, height: 28 }}>
           {genre.name}
         </Chip>
       ))}
     </View>
   );
-}
+});

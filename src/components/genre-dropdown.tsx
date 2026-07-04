@@ -45,7 +45,7 @@ export function GenreDropdown({
 
   return (
     <>
-      <Pressable className="absolute inset-0" onPress={onClose} />
+      <Pressable className="absolute inset-0" onPress={onClose} accessibilityLabel="Close genre menu" />
       <Animated.View
         style={[
           {

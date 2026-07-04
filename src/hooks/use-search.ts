@@ -14,7 +14,7 @@ export function useSearchMulti(query: string) {
 export function useInfiniteSearchMulti(query: string) {
   const trimmed = query.trim();
   return useInfiniteQuery({
-    queryKey: ['search', 'infinite', trimmed],
+    ...queries.search.infinite(trimmed),
     queryFn: ({ pageParam }) => searchApi.multi(trimmed, pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>

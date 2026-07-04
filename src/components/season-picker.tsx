@@ -33,7 +33,7 @@ export function SeasonPicker({ seasons, selectedSeason, onSelect }: SeasonPicker
             textStyle={{ fontSize: 13, fontWeight: '600', color: active ? '#FFFFFF' : Colors.textSecondary }}
             style={{
               backgroundColor: active ? Colors.primary : Colors.elevated,
-              borderColor: active ? Colors.primary : '#2A2A2A',
+              borderColor: active ? Colors.primary : Colors.border,
             }}>
             {item.name}
           </Chip>

@@ -19,6 +19,7 @@ import {
 
 import { vidkingEmbedUrl, vidkingTvEmbedUrl } from '@/api/client';
 import { ErrorState } from '@/components/error-state';
+import { Colors } from '@/constants/theme';
 import { useMovieDetail } from '@/hooks/use-movies';
 import { useTvDetail } from '@/hooks/use-tv';
 import {
@@ -113,7 +114,7 @@ function PlayerLoadingOverlay() {
               height: 80,
               borderRadius: 40,
               borderWidth: 2,
-              borderColor: '#E50914',
+              borderColor: Colors.primary,
             },
             ringStyle,
           ]}
@@ -124,17 +125,17 @@ function PlayerLoadingOverlay() {
               width: 56,
               height: 56,
               borderRadius: 28,
-              backgroundColor: 'rgba(229, 9, 20, 0.2)',
+              backgroundColor: `${Colors.primary}33`,
               alignItems: 'center',
               justifyContent: 'center',
             },
             iconStyle,
           ]}>
-          <Ionicons name="play" size={28} color="#E50914" />
+          <Ionicons name="play" size={28} color={Colors.primary} />
         </Animated.View>
       </View>
       <Text className="mt-6 text-sm font-semibold text-[#9CA3AF]">Loading player…</Text>
-      <ActivityIndicator color="#E50914" style={{ marginTop: 12 }} />
+      <ActivityIndicator color={Colors.primary} style={{ marginTop: 12 }} />
     </View>
   );
 }
@@ -284,6 +285,9 @@ export default function PlayerScreen() {
 
       <Pressable
         onPress={() => router.back()}
+        hitSlop={8}
+        accessibilityLabel="Close player"
+        accessibilityRole="button"
         className="absolute right-4 h-10 w-10 items-center justify-center rounded-full bg-black/70 active:opacity-70"
         style={{ top: insets.top + 8 }}>
         <Ionicons name="close" size={22} color="#FFFFFF" />

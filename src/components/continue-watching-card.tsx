@@ -3,11 +3,13 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { type DimensionValue, Pressable, Text, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { type WithSpringConfig, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { backdropUrl, posterUrl } from '@/api/client';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import type { ContinueWatchingItem } from '@/stores/continue-watching-store';
+
+const PRESS_SPRING: WithSpringConfig = { damping: 15, stiffness: 300 };
 
 interface ContinueWatchingCardProps {
   item: ContinueWatchingItem;
@@ -30,8 +32,10 @@ export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, w
   return (
     <Animated.View style={[{ width }, animatedStyle]}>
     <Pressable
-      onPressIn={() => { scale.value = withSpring(0.95, { damping: 15, stiffness: 300 }); }}
-      onPressOut={() => { scale.value = withSpring(1, { damping: 15, stiffness: 300 }); }}
+      onPressIn={() => { scale.value = withSpring(0.95, PRESS_SPRING); }}
+      onPressOut={() => { scale.value = withSpring(1, PRESS_SPRING); }}
+      accessibilityLabel={`Continue watching ${item.title}`}
+      accessibilityRole="button"
       onPress={() =>
         router.push(
           isTv

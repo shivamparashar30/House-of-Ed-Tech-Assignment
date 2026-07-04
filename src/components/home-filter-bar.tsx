@@ -32,7 +32,7 @@ export function HomeFilterBar({
         textStyle={{ fontSize: 13, fontWeight: '600', color: section === 'movies' ? '#FFFFFF' : Colors.textSecondary }}
         style={{
           backgroundColor: section === 'movies' ? Colors.primary : Colors.elevated,
-          borderColor: section === 'movies' ? Colors.primary : '#2A2A2A',
+          borderColor: section === 'movies' ? Colors.primary : Colors.border,
         }}>
         Movies
       </Chip>
@@ -44,7 +44,7 @@ export function HomeFilterBar({
         textStyle={{ fontSize: 13, fontWeight: '600', color: section === 'tv' ? '#FFFFFF' : Colors.textSecondary }}
         style={{
           backgroundColor: section === 'tv' ? Colors.primary : Colors.elevated,
-          borderColor: section === 'tv' ? Colors.primary : '#2A2A2A',
+          borderColor: section === 'tv' ? Colors.primary : Colors.border,
         }}>
         TV Shows
       </Chip>
@@ -58,7 +58,7 @@ export function HomeFilterBar({
         textStyle={{ fontSize: 13, fontWeight: '600', color: selectedGenreName ? '#FFFFFF' : Colors.textSecondary }}
         style={{
           backgroundColor: selectedGenreName ? Colors.primary : Colors.elevated,
-          borderColor: selectedGenreName ? Colors.primary : '#2A2A2A',
+          borderColor: selectedGenreName ? Colors.primary : Colors.border,
         }}>
         {selectedGenreName ?? 'Categories'}
       </Chip>

@@ -50,6 +50,9 @@ export const MediaListItem = memo(function MediaListItem({ item }: MediaListItem
             router.push(isTv ? `/player/${item.id}?type=tv&season=1&episode=1` : `/player/${item.id}`),
           )
         }
+        hitSlop={8}
+        accessibilityLabel={`Play ${item.title}`}
+        accessibilityRole="button"
         className="h-10 w-10 items-center justify-center rounded-full bg-primary active:opacity-80">
         <Ionicons name="play" size={18} color="#FFFFFF" />
       </Pressable>

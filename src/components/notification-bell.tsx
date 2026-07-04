@@ -55,6 +55,8 @@ export function NotificationBell() {
     <Pressable
       onPress={() => router.push('/notifications')}
       hitSlop={8}
+      accessibilityLabel={unread > 0 ? `Notifications, ${unread} unread` : 'Notifications'}
+      accessibilityRole="button"
       className="relative h-11 w-11 items-center justify-center rounded-xl bg-elevated active:opacity-70">
       <Animated.View style={bellStyle}>
         <Ionicons name="notifications-outline" size={20} color={Colors.text} />

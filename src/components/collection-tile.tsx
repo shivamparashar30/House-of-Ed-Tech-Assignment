@@ -4,11 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { type WithSpringConfig, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { posterUrl } from '@/api/client';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import type { Collection } from '@/stores/collections-store';
+
+const PRESS_SPRING: WithSpringConfig = { damping: 15, stiffness: 300 };
 
 interface CollectionTileProps {
   collection: Collection;
@@ -27,8 +29,8 @@ export const CollectionTile = memo(function CollectionTile({ collection, width }
   return (
     <Animated.View style={[{ width }, animatedStyle]}>
       <Pressable
-        onPressIn={() => { scale.value = withSpring(0.95, { damping: 15, stiffness: 300 }); }}
-        onPressOut={() => { scale.value = withSpring(1, { damping: 15, stiffness: 300 }); }}
+        onPressIn={() => { scale.value = withSpring(0.95, PRESS_SPRING); }}
+        onPressOut={() => { scale.value = withSpring(1, PRESS_SPRING); }}
         onPress={() => router.push(`/collection/${collection.id}`)}>
         <View
           className="items-center justify-center overflow-hidden rounded-2xl bg-elevated"

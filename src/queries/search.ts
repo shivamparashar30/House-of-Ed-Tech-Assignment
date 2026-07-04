@@ -7,4 +7,8 @@ export const search = createQueryKeys('search', {
     queryKey: [query],
     queryFn: () => searchApi.multi(query),
   }),
+  infinite: (query: string) => ({
+    queryKey: [query],
+    queryFn: ({ pageParam = 1 }: { pageParam?: number }) => searchApi.multi(query, pageParam),
+  }),
 });
