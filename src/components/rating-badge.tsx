@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { cn } from '@/lib/cn';
 import { formatRating } from '@/lib/format';
 
@@ -11,6 +11,7 @@ interface RatingBadgeProps {
 }
 
 export function RatingBadge({ voteAverage, className }: RatingBadgeProps) {
+  const Colors = useThemeColors();
   return (
     <View
       className={cn(

@@ -3,9 +3,10 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { type DimensionValue, Pressable, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { backdropUrl, posterUrl } from '@/api/client';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import type { ContinueWatchingItem } from '@/stores/continue-watching-store';
 
 interface ContinueWatchingCardProps {
@@ -15,6 +16,7 @@ interface ContinueWatchingCardProps {
 }
 
 export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, width, onRemove }: ContinueWatchingCardProps) {
+  const Colors = useThemeColors();
   const router = useRouter();
   const uri = backdropUrl(item.backdrop_path, 'w780') ?? posterUrl(item.poster_path);
   const progressPercent = `${Math.min(100, Math.round(item.progress * 100))}%` as DimensionValue;
@@ -22,8 +24,14 @@ export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, w
   const isTv = item.media_type === 'tv';
   const subtitle = isTv ? `S${item.season ?? 1}:E${item.episode ?? 1}` : null;
 
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+
   return (
+    <Animated.View style={[{ width }, animatedStyle]}>
     <Pressable
+      onPressIn={() => { scale.value = withSpring(0.95, { damping: 15, stiffness: 300 }); }}
+      onPressOut={() => { scale.value = withSpring(1, { damping: 15, stiffness: 300 }); }}
       onPress={() =>
         router.push(
           isTv
@@ -31,8 +39,7 @@ export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, w
             : `/player/${item.id}`,
         )
       }
-      className="active:opacity-80"
-      style={{ width }}>
+      className="active:opacity-80">
       <View
         className="overflow-hidden rounded-xl bg-elevated"
         style={{ aspectRatio: 16 / 9 }}>
@@ -62,10 +69,11 @@ export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, w
         </View>
       </View>
 
-      <Text numberOfLines={1} className="mt-2 text-sm font-semibold text-white">
+      <Text numberOfLines={1} className="mt-2 text-sm font-semibold text-foreground">
         {item.title}
       </Text>
       {subtitle ? <Text className="text-xs text-muted">{subtitle}</Text> : null}
     </Pressable>
+    </Animated.View>
   );
 });

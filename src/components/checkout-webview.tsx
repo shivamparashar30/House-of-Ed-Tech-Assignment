@@ -4,7 +4,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView, type WebViewProps } from 'react-native-webview';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { isPaymentSuccessUrl } from '@/lib/checkout';
 
 interface CheckoutWebViewProps {
@@ -14,6 +14,7 @@ interface CheckoutWebViewProps {
 }
 
 export function CheckoutWebView({ url, onSuccess, onCancel }: CheckoutWebViewProps) {
+  const Colors = useThemeColors();
   const [loading, setLoading] = useState(true);
 
   const handleShouldStartLoad: WebViewProps['onShouldStartLoadWithRequest'] = (request) => {

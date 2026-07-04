@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { Chip } from 'react-native-paper';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 
 export type HomeSection = 'home' | 'movies' | 'tv';
 
@@ -21,6 +21,7 @@ export function HomeFilterBar({
   onTv,
   onCategories,
 }: HomeFilterBarProps) {
+  const Colors = useThemeColors();
   return (
     <View className="flex-row gap-2 px-5 py-3">
       <Chip

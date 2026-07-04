@@ -13,7 +13,7 @@ import { HeroBanner } from '@/components/hero-banner';
 import { HomeFilterBar, type HomeSection } from '@/components/home-filter-bar';
 import { MovieCarousel } from '@/components/movie-carousel';
 import { NotificationBell } from '@/components/notification-bell';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useDiscoverMoviesByGenre, useDiscoverTvByGenre } from '@/hooks/use-discover';
 import { useUnifiedGenres } from '@/hooks/use-genres';
 import {
@@ -32,6 +32,7 @@ import { useAuthStore } from '@/stores/auth-store';
 const HERO_COUNT = 5;
 
 export default function HomeScreen() {
+  const Colors = useThemeColors();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const avatarSeed =
@@ -102,7 +103,7 @@ export default function HomeScreen() {
     if (selectedGenre) {
       return (
         <View className="pt-6">
-          <Text className="px-5 pb-4 text-2xl font-extrabold text-white">{selectedGenre.name}</Text>
+          <Text className="px-5 pb-4 text-2xl font-extrabold text-foreground">{selectedGenre.name}</Text>
           {section !== 'tv' && (
             <MovieCarousel
               title="Movies"
@@ -189,7 +190,7 @@ export default function HomeScreen() {
         onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}>
         <View className="flex-row items-center gap-2 px-5 pt-2">
           <Ionicons name="film" size={22} color={Colors.primary} />
-          <Text className="text-xl font-extrabold tracking-tight text-white">
+          <Text className="text-xl font-extrabold tracking-tight text-foreground">
             Binge<Text className="text-primary">Box</Text>
           </Text>
           <View className="flex-1" />

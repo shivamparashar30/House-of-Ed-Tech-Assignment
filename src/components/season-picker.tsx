@@ -2,7 +2,7 @@ import { FlatList } from 'react-native';
 import { Chip } from 'react-native-paper';
 
 import type { Season } from '@/api/types';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 
 interface SeasonPickerProps {
   seasons: Season[];
@@ -11,6 +11,7 @@ interface SeasonPickerProps {
 }
 
 export function SeasonPicker({ seasons, selectedSeason, onSelect }: SeasonPickerProps) {
+  const Colors = useThemeColors();
   return (
     <FlatList
       horizontal

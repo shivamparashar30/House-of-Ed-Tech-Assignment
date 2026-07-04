@@ -6,7 +6,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { cn } from '@/lib/cn';
 import type { UnifiedGenre } from '@/lib/genres';
 
@@ -29,6 +29,7 @@ export function GenreDropdown({
   onSelect,
   onClose,
 }: GenreDropdownProps) {
+  const Colors = useThemeColors();
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export function GenreDropdown({
                   <Text
                     className={cn(
                       'text-sm',
-                      active ? 'font-bold text-primary' : 'font-medium text-white',
+                      active ? 'font-bold text-primary' : 'font-medium text-foreground',
                     )}>
                     {genre.name}
                   </Text>

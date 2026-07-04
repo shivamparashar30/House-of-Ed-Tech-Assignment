@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { NamePromptModal } from '@/components/name-prompt-modal';
 import { type CollectionItem, useCollectionsStore } from '@/stores/collections-store';
 
@@ -14,6 +14,7 @@ interface AddToCollectionSheetProps {
 }
 
 export function AddToCollectionSheet({ visible, item, onClose }: AddToCollectionSheetProps) {
+  const Colors = useThemeColors();
   const insets = useSafeAreaInsets();
   const collections = useCollectionsStore((state) => state.collections);
   const addItem = useCollectionsStore((state) => state.addItem);
@@ -43,7 +44,7 @@ export function AddToCollectionSheet({ visible, item, onClose }: AddToCollection
           className="rounded-t-3xl bg-surface"
           style={{ paddingBottom: insets.bottom + 12, maxHeight: '75%' }}>
           <View className="flex-row items-center justify-between px-5 py-4">
-            <Text className="text-lg font-bold text-white">Add to collection</Text>
+            <Text className="text-lg font-bold text-foreground">Add to collection</Text>
             <Pressable onPress={onClose} hitSlop={8} className="active:opacity-70">
               <Ionicons name="close" size={22} color={Colors.text} />
             </Pressable>
@@ -55,7 +56,7 @@ export function AddToCollectionSheet({ visible, item, onClose }: AddToCollection
             <View className="h-9 w-9 items-center justify-center rounded-full bg-primary">
               <Ionicons name="add" size={20} color="#FFFFFF" />
             </View>
-            <Text className="text-base font-semibold text-white">New collection</Text>
+            <Text className="text-base font-semibold text-foreground">New collection</Text>
           </Pressable>
 
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -67,7 +68,7 @@ export function AddToCollectionSheet({ visible, item, onClose }: AddToCollection
                   onPress={() => toggle(collection.id, contains)}
                   className="flex-row items-center justify-between px-5 py-3.5 active:bg-elevated">
                   <View className="flex-1">
-                    <Text numberOfLines={1} className="text-base font-medium text-white">
+                    <Text numberOfLines={1} className="text-base font-medium text-foreground">
                       {collection.name}
                     </Text>
                     <Text className="text-xs text-muted">

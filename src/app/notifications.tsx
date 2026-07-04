@@ -2,15 +2,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { FlatList, Linking, Pressable, Text, View } from 'react-native';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/empty-state';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { cn } from '@/lib/cn';
 import { formatRelativeTime } from '@/lib/format';
 import { type AppNotification, useNotificationsStore } from '@/stores/notifications-store';
 
 export default function NotificationsScreen() {
+  const Colors = useThemeColors();
   const router = useRouter();
   const items = useNotificationsStore((state) => state.items);
   const markAllRead = useNotificationsStore((state) => state.markAllRead);
@@ -30,7 +32,7 @@ export default function NotificationsScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8} className="active:opacity-70">
           <Ionicons name="chevron-back" size={26} color={Colors.text} />
         </Pressable>
-        <Text className="text-2xl font-extrabold text-white">Notifications</Text>
+        <Text className="text-2xl font-extrabold text-foreground">Notifications</Text>
         <View className="flex-1" />
         {items.length > 0 && (
           <Pressable onPress={clear} hitSlop={8} className="active:opacity-70">
@@ -53,22 +55,24 @@ export default function NotificationsScreen() {
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           windowSize={5}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() => handleOpen(item)}
-              className={cn(
-                'flex-row gap-3 rounded-2xl bg-elevated p-4 active:opacity-70',
-                !item.read && 'border border-primary/40',
-              )}>
-              <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
-                <Ionicons name="notifications" size={20} color={Colors.primary} />
-              </View>
-              <View className="flex-1">
-                <Text className="text-base font-bold text-white">{item.title}</Text>
-                {item.body ? <Text className="mt-0.5 text-sm text-muted">{item.body}</Text> : null}
-                <Text className="mt-2 text-xs text-muted">{formatRelativeTime(item.receivedAt)}</Text>
-              </View>
-            </Pressable>
+          renderItem={({ item, index }) => (
+            <Animated.View entering={FadeInRight.delay(index * 60).duration(350).springify()}>
+              <Pressable
+                onPress={() => handleOpen(item)}
+                className={cn(
+                  'flex-row gap-3 rounded-2xl bg-elevated p-4 active:opacity-70',
+                  !item.read && 'border border-primary/40',
+                )}>
+                <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
+                  <Ionicons name="notifications" size={20} color={Colors.primary} />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-base font-bold text-foreground">{item.title}</Text>
+                  {item.body ? <Text className="mt-0.5 text-sm text-muted">{item.body}</Text> : null}
+                  <Text className="mt-2 text-xs text-muted">{formatRelativeTime(item.receivedAt)}</Text>
+                </View>
+              </Pressable>
+            </Animated.View>
           )}
         />
       )}

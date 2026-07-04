@@ -9,7 +9,7 @@ import { MediaListItem } from '@/components/media-list-item';
 import { PosterGrid } from '@/components/poster-grid';
 import { GridSkeleton, ListItemSkeleton } from '@/components/skeleton';
 import { SearchBar } from '@/components/search-bar';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTrendingMovies } from '@/hooks/use-movies';
 import { useInfiniteSearchMulti, useSearchMulti } from '@/hooks/use-search';
@@ -28,10 +28,11 @@ function RecommendationSkeleton() {
 }
 
 function SectionTitle({ title }: { title: string }) {
-  return <Text className="px-1 pb-4 text-lg font-bold text-white">{title}</Text>;
+  return <Text className="px-1 pb-4 text-lg font-bold text-foreground">{title}</Text>;
 }
 
 export default function SearchScreen() {
+  const Colors = useThemeColors();
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 400);
   const trimmed = debouncedQuery.trim();
@@ -148,7 +149,7 @@ export default function SearchScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <View className="px-4 pb-3 pt-2">
-        <Text className="mb-4 text-2xl font-extrabold text-white">Search</Text>
+        <Text className="mb-4 text-2xl font-extrabold text-foreground">Search</Text>
         <SearchBar value={query} onChangeText={setQuery} placeholder="Movies, shows, genres" />
       </View>
       <View className="flex-1">{renderContent()}</View>

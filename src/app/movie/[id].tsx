@@ -2,8 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import Reanimated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { backdropUrl } from '@/api/client';
@@ -14,7 +15,7 @@ import { ErrorState } from '@/components/error-state';
 import { GenrePills } from '@/components/genre-pills';
 import { MovieCarousel } from '@/components/movie-carousel';
 import { RatingBadge } from '@/components/rating-badge';
-import { Colors, HeroGradient } from '@/constants/theme';
+import { useHeroGradient, useThemeColors } from '@/hooks/use-theme-colors';
 import { useFreeTierGuard } from '@/hooks/use-free-tier-guard';
 import { useMovieDetail } from '@/hooks/use-movies';
 import { formatReleaseDate, formatRuntime } from '@/lib/format';
@@ -26,6 +27,8 @@ const HERO_HEIGHT = 420;
 const HEADER_VISIBLE_THRESHOLD = 280;
 
 export default function MovieDetailScreen() {
+  const Colors = useThemeColors();
+  const heroGradient = useHeroGradient();
   const { id } = useLocalSearchParams<{ id: string }>();
   const movieId = Number(id);
   const router = useRouter();
@@ -38,6 +41,25 @@ export default function MovieDetailScreen() {
   const continueItem = useContinueProgress(movieId);
   const inCollection = useIsInAnyCollection(movieId);
   const [collectionSheetOpen, setCollectionSheetOpen] = useState(false);
+
+  const bookmarkScale = useSharedValue(1);
+  const collectionScale = useSharedValue(1);
+  const bookmarkAnimStyle = useAnimatedStyle(() => ({ transform: [{ scale: bookmarkScale.value }] }));
+  const collectionAnimStyle = useAnimatedStyle(() => ({ transform: [{ scale: collectionScale.value }] }));
+  const bounceBookmark = useCallback(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    bookmarkScale.value = withSequence(
+      withSpring(1.3, { damping: 8, stiffness: 400 }),
+      withSpring(1, { damping: 10, stiffness: 300 }),
+    );
+  }, [bookmarkScale]);
+  const bounceCollection = useCallback(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    collectionScale.value = withSequence(
+      withSpring(1.3, { damping: 8, stiffness: 400 }),
+      withSpring(1, { damping: 10, stiffness: 300 }),
+    );
+  }, [collectionScale]);
 
   const scrollY = useMemo(() => new Animated.Value(0), []);
 
@@ -142,7 +164,7 @@ export default function MovieDetailScreen() {
           {backdrop && (
             <Image source={{ uri: backdrop }} style={{ flex: 1 }} contentFit="cover" transition={300} />
           )}
-          <LinearGradient colors={HeroGradient} style={{ position: 'absolute', inset: 0 }} />
+          <LinearGradient colors={heroGradient as [string, string, ...string[]]} style={{ position: 'absolute', inset: 0 }} />
         </Animated.View>
 
         <View className="-mt-20 gap-4 px-5">
@@ -172,35 +194,43 @@ export default function MovieDetailScreen() {
               </Text>
             </Pressable>
 
-            <Pressable
-              onPress={() =>
-                toggleWatchlist({
-                  id: movie.id,
-                  media_type: 'movie',
-                  title: movie.title,
-                  poster_path: movie.poster_path,
-                  backdrop_path: movie.backdrop_path,
-                  vote_average: movie.vote_average,
-                  release_date: movie.release_date,
-                })
-              }
-              className="items-center justify-center rounded-xl bg-elevated px-4 py-3.5 active:opacity-70">
-              <Ionicons
-                name={inWatchlist ? 'bookmark' : 'bookmark-outline'}
-                size={20}
-                color={inWatchlist ? Colors.accent : Colors.text}
-              />
-            </Pressable>
+            <Reanimated.View style={bookmarkAnimStyle}>
+              <Pressable
+                onPress={() => {
+                  bounceBookmark();
+                  toggleWatchlist({
+                    id: movie.id,
+                    media_type: 'movie',
+                    title: movie.title,
+                    poster_path: movie.poster_path,
+                    backdrop_path: movie.backdrop_path,
+                    vote_average: movie.vote_average,
+                    release_date: movie.release_date,
+                  });
+                }}
+                className="items-center justify-center rounded-xl bg-elevated px-4 py-3.5 active:opacity-70">
+                <Ionicons
+                  name={inWatchlist ? 'bookmark' : 'bookmark-outline'}
+                  size={20}
+                  color={inWatchlist ? Colors.accent : Colors.text}
+                />
+              </Pressable>
+            </Reanimated.View>
 
-            <Pressable
-              onPress={() => setCollectionSheetOpen(true)}
-              className="items-center justify-center rounded-xl bg-elevated px-4 py-3.5 active:opacity-70">
-              <Ionicons
-                name={inCollection ? 'checkmark' : 'add'}
-                size={22}
-                color={inCollection ? Colors.accent : Colors.text}
-              />
-            </Pressable>
+            <Reanimated.View style={collectionAnimStyle}>
+              <Pressable
+                onPress={() => {
+                  bounceCollection();
+                  setCollectionSheetOpen(true);
+                }}
+                className="items-center justify-center rounded-xl bg-elevated px-4 py-3.5 active:opacity-70">
+                <Ionicons
+                  name={inCollection ? 'checkmark' : 'add'}
+                  size={22}
+                  color={inCollection ? Colors.accent : Colors.text}
+                />
+              </Pressable>
+            </Reanimated.View>
           </View>
 
           {movie.overview ? (

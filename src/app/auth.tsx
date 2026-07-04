@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useAuthStore } from '@/stores/auth-store';
 
 type Mode = 'signIn' | 'signUp';
@@ -23,6 +23,7 @@ function Field({
 }: {
   icon: keyof typeof Ionicons.glyphMap;
 } & ComponentProps<typeof TextInput>) {
+  const Colors = useThemeColors();
   return (
     <View className="flex-row items-center gap-2 rounded-2xl bg-elevated px-4" style={{ height: 52 }}>
       <Ionicons name={icon} size={20} color={Colors.textSecondary} />
@@ -37,6 +38,7 @@ function Field({
 }
 
 export default function AuthScreen() {
+  const Colors = useThemeColors();
   const [mode, setMode] = useState<Mode>('signIn');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

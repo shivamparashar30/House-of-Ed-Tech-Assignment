@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 
 export default function TabsLayout() {
+  const Colors = useThemeColors();
+
   return (
     <Tabs
       screenOptions={{

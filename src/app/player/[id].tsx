@@ -2,7 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   WebView,
@@ -12,7 +19,6 @@ import {
 
 import { vidkingEmbedUrl, vidkingTvEmbedUrl } from '@/api/client';
 import { ErrorState } from '@/components/error-state';
-import { Colors } from '@/constants/theme';
 import { useMovieDetail } from '@/hooks/use-movies';
 import { useTvDetail } from '@/hooks/use-tv';
 import {
@@ -59,6 +65,78 @@ function buildPlayerHtml(embedUrl: string): string {
 </script>
 </body>
 </html>`;
+}
+
+function PlayerLoadingOverlay() {
+  const pulseScale = useSharedValue(1);
+  const pulseOpacity = useSharedValue(0.6);
+  const ringScale = useSharedValue(0.8);
+  const ringOpacity = useSharedValue(0.5);
+
+  useEffect(() => {
+    pulseScale.value = withRepeat(
+      withSequence(withTiming(1.15, { duration: 800 }), withTiming(1, { duration: 800 })),
+      -1,
+    );
+    pulseOpacity.value = withRepeat(
+      withSequence(withTiming(1, { duration: 800 }), withTiming(0.6, { duration: 800 })),
+      -1,
+    );
+    ringScale.value = withRepeat(
+      withSequence(withTiming(1.6, { duration: 1200 }), withTiming(0.8, { duration: 0 })),
+      -1,
+    );
+    ringOpacity.value = withRepeat(
+      withSequence(withTiming(0, { duration: 1200 }), withTiming(0.5, { duration: 0 })),
+      -1,
+    );
+  }, [pulseScale, pulseOpacity, ringScale, ringOpacity]);
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulseScale.value }],
+    opacity: pulseOpacity.value,
+  }));
+
+  const ringStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: ringScale.value }],
+    opacity: ringOpacity.value,
+  }));
+
+  return (
+    <View className="absolute inset-0 items-center justify-center bg-black">
+      <View className="items-center justify-center">
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              borderWidth: 2,
+              borderColor: '#E50914',
+            },
+            ringStyle,
+          ]}
+        />
+        <Animated.View
+          style={[
+            {
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: 'rgba(229, 9, 20, 0.2)',
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+            iconStyle,
+          ]}>
+          <Ionicons name="play" size={28} color="#E50914" />
+        </Animated.View>
+      </View>
+      <Text className="mt-6 text-sm font-semibold text-[#9CA3AF]">Loading player…</Text>
+      <ActivityIndicator color="#E50914" style={{ marginTop: 12 }} />
+    </View>
+  );
 }
 
 export default function PlayerScreen() {
@@ -112,7 +190,9 @@ export default function PlayerScreen() {
   }, [isTv, show, movie, seasonNumber, episodeNumber]);
 
   const mediaRef = useRef(media);
-  mediaRef.current = media;
+  useEffect(() => {
+    mediaRef.current = media;
+  }, [media]);
   const lastSavedAt = useRef(0);
 
   const [resumeSeconds] = useState(() => {
@@ -200,11 +280,7 @@ export default function PlayerScreen() {
         />
       )}
 
-      {loading && !failed && (
-        <View className="absolute inset-0 items-center justify-center bg-black">
-          <ActivityIndicator color={Colors.primary} size="large" />
-        </View>
-      )}
+      {loading && !failed && <PlayerLoadingOverlay />}
 
       <Pressable
         onPress={() => router.back()}

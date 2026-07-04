@@ -3,10 +3,11 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { backdropUrl } from '@/api/client';
 import type { Episode } from '@/api/types';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useFreeTierGuard } from '@/hooks/use-free-tier-guard';
 import { formatRuntime } from '@/lib/format';
 
@@ -22,6 +23,7 @@ const EpisodeItem = memo(function EpisodeItem({
   episode: Episode;
   onPlay: (seasonNumber: number, episodeNumber: number) => void;
 }) {
+  const Colors = useThemeColors();
   const still = backdropUrl(episode.still_path, 'w780');
   const runtime = formatRuntime(episode.runtime);
 
@@ -41,7 +43,7 @@ const EpisodeItem = memo(function EpisodeItem({
       </View>
 
       <View className="flex-1 gap-1">
-        <Text numberOfLines={1} className="text-sm font-semibold text-white">
+        <Text numberOfLines={1} className="text-sm font-semibold text-foreground">
           {episode.episode_number}. {episode.name}
         </Text>
         {runtime ? <Text className="text-xs text-muted">{runtime}</Text> : null}
@@ -72,8 +74,10 @@ export const EpisodeList = memo(function EpisodeList({ showId, episodes }: Episo
 
   return (
     <View className="gap-4 px-5">
-      {episodes.map((episode) => (
-        <EpisodeItem key={episode.id} episode={episode} onPlay={handlePlay} />
+      {episodes.map((episode, index) => (
+        <Animated.View key={episode.id} entering={FadeInUp.delay(index * 60).duration(350).springify()}>
+          <EpisodeItem episode={episode} onPlay={handlePlay} />
+        </Animated.View>
       ))}
     </View>
   );

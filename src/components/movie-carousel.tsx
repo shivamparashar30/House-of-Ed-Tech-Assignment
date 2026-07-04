@@ -1,5 +1,6 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { FlatList, View } from 'react-native';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 
 import { MovieCard } from '@/components/movie-card';
 import { CarouselSkeleton } from '@/components/skeleton';
@@ -15,6 +16,15 @@ interface MovieCarouselProps {
 }
 
 export const MovieCarousel = memo(function MovieCarousel({ title, movies, isLoading }: MovieCarouselProps) {
+  const renderItem = useCallback(
+    ({ item, index }: { item: MediaCardItem; index: number }) => (
+      <Animated.View entering={FadeInRight.delay(index * 60).duration(400).springify()}>
+        <MovieCard movie={item} width={CARD_WIDTH} />
+      </Animated.View>
+    ),
+    [],
+  );
+
   if (isLoading) {
     return (
       <View className="mb-7">
@@ -40,7 +50,7 @@ export const MovieCarousel = memo(function MovieCarousel({ title, movies, isLoad
         initialNumToRender={5}
         maxToRenderPerBatch={5}
         windowSize={5}
-        renderItem={({ item }) => <MovieCard movie={item} width={CARD_WIDTH} />}
+        renderItem={renderItem}
       />
     </View>
   );

@@ -7,10 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { EmptyState } from '@/components/empty-state';
 import { NamePromptModal } from '@/components/name-prompt-modal';
 import { PosterGrid } from '@/components/poster-grid';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useCollectionsStore } from '@/stores/collections-store';
 
 export default function CollectionDetailScreen() {
+  const Colors = useThemeColors();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
@@ -53,7 +54,7 @@ export default function CollectionDetailScreen() {
         <Ionicons name="chevron-back" size={26} color={Colors.text} />
       </Pressable>
       <View className="flex-1">
-        <Text numberOfLines={1} className="text-2xl font-extrabold text-white">
+        <Text numberOfLines={1} className="text-2xl font-extrabold text-foreground">
           {collection.name}
         </Text>
         <Text className="text-sm text-muted">

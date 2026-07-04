@@ -2,13 +2,14 @@ import { View } from 'react-native';
 import { Chip } from 'react-native-paper';
 
 import type { Genre } from '@/api/types';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 
 interface GenrePillsProps {
   genres: Genre[];
 }
 
 export function GenrePills({ genres }: GenrePillsProps) {
+  const Colors = useThemeColors();
   if (genres.length === 0) return null;
 
   return (

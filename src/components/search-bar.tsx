@@ -1,6 +1,6 @@
 import { Searchbar } from 'react-native-paper';
 
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 
 interface SearchBarProps {
   value: string;
@@ -9,6 +9,8 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ value, onChangeText, placeholder = 'Search movies' }: SearchBarProps) {
+  const Colors = useThemeColors();
+
   return (
     <Searchbar
       value={value}

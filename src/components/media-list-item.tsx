@@ -3,10 +3,11 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { posterUrl } from '@/api/client';
 import type { MediaCardItem } from '@/api/types';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useFreeTierGuard } from '@/hooks/use-free-tier-guard';
 import { formatYear } from '@/lib/format';
 
@@ -16,6 +17,7 @@ interface MediaListItemProps {
 
 export const MediaListItem = memo(function MediaListItem({ item }: MediaListItemProps) {
   const router = useRouter();
+  const Colors = useThemeColors();
   const { tryPlay } = useFreeTierGuard();
   const uri = posterUrl(item.poster_path, 'w342');
   const isTv = item.media_type === 'tv';
@@ -23,7 +25,7 @@ export const MediaListItem = memo(function MediaListItem({ item }: MediaListItem
   const subtitle = [isTv ? 'TV Show' : 'Movie', year].filter(Boolean).join(' • ');
 
   return (
-    <View className="flex-row items-center gap-3 px-1 py-2">
+    <Animated.View entering={FadeIn.duration(300)} className="flex-row items-center gap-3 px-1 py-2">
       <Pressable
         onPress={() => router.push(isTv ? `/tv/${item.id}` : `/movie/${item.id}`)}
         className="flex-1 flex-row items-center gap-3 active:opacity-80">
@@ -35,7 +37,7 @@ export const MediaListItem = memo(function MediaListItem({ item }: MediaListItem
           )}
         </View>
         <View className="flex-1">
-          <Text numberOfLines={2} className="text-sm font-semibold text-white">
+          <Text numberOfLines={2} className="text-sm font-semibold text-foreground">
             {item.title}
           </Text>
           <Text className="mt-0.5 text-xs text-muted">{subtitle}</Text>
@@ -51,6 +53,6 @@ export const MediaListItem = memo(function MediaListItem({ item }: MediaListItem
         className="h-10 w-10 items-center justify-center rounded-full bg-primary active:opacity-80">
         <Ionicons name="play" size={18} color="#FFFFFF" />
       </Pressable>
-    </View>
+    </Animated.View>
   );
 });

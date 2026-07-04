@@ -7,13 +7,14 @@ import { CollectionTile } from '@/components/collection-tile';
 import { EmptyState } from '@/components/empty-state';
 import { NamePromptModal } from '@/components/name-prompt-modal';
 import { PosterGrid } from '@/components/poster-grid';
-import { Colors } from '@/constants/theme';
+import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useCollectionsStore } from '@/stores/collections-store';
 import { useWatchlistStore } from '@/stores/watchlist-store';
 
 const TILE_WIDTH = 168;
 
 export default function LibraryScreen() {
+  const Colors = useThemeColors();
   const items = useWatchlistStore((state) => state.items);
   const removeFromWatchlist = useWatchlistStore((state) => state.remove);
   const collections = useCollectionsStore((state) => state.collections);
@@ -23,15 +24,15 @@ export default function LibraryScreen() {
 
   const header = (
     <View className="pb-2">
-      <Text className="px-1 pb-5 pt-2 text-2xl font-extrabold text-white">My Library</Text>
+      <Text className="px-1 pb-5 pt-2 text-2xl font-extrabold text-foreground">My Library</Text>
 
       <View className="mb-3 flex-row items-center justify-between px-1">
-        <Text className="text-lg font-bold text-white">Collections</Text>
+        <Text className="text-lg font-bold text-foreground">Collections</Text>
         <Pressable
           onPress={() => setCreateOpen(true)}
           className="flex-row items-center gap-1 rounded-full bg-elevated px-3 py-1.5 active:opacity-80">
           <Ionicons name="add" size={16} color={Colors.primary} />
-          <Text className="text-sm font-semibold text-white">New</Text>
+          <Text className="text-sm font-semibold text-foreground">New</Text>
         </Pressable>
       </View>
 
@@ -58,7 +59,7 @@ export default function LibraryScreen() {
         />
       )}
 
-      <Text className="mb-1 px-1 text-lg font-bold text-white">Watchlist</Text>
+      <Text className="mb-1 px-1 text-lg font-bold text-foreground">Watchlist</Text>
     </View>
   );
 

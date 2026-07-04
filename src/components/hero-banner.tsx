@@ -10,7 +10,7 @@ import { backdropUrl } from '@/api/client';
 import type { HeroMedia } from '@/api/types';
 import { RatingBadge } from '@/components/rating-badge';
 import { Skeleton } from '@/components/skeleton';
-import { Colors, HeroGradient } from '@/constants/theme';
+import { useHeroGradient, useThemeColors } from '@/hooks/use-theme-colors';
 import { useFreeTierGuard } from '@/hooks/use-free-tier-guard';
 import { formatYear } from '@/lib/format';
 
@@ -23,10 +23,12 @@ const HeroCard = memo(function HeroCard({
   media,
   width,
   height,
+  gradient,
 }: {
   media: HeroMedia;
   width: number;
   height: number;
+  gradient: readonly string[];
 }) {
   const router = useRouter();
   const { tryPlay } = useFreeTierGuard();
@@ -39,7 +41,7 @@ const HeroCard = memo(function HeroCard({
         <Image source={{ uri }} style={{ width, height }} contentFit="cover" transition={300} />
       )}
 
-      <LinearGradient colors={HeroGradient} style={{ position: 'absolute', inset: 0 }} />
+      <LinearGradient colors={gradient as [string, string, ...string[]]} style={{ position: 'absolute', inset: 0 }} />
 
       <Animated.View
         entering={FadeInDown.duration(500).delay(200)}
@@ -70,7 +72,7 @@ const HeroCard = memo(function HeroCard({
           <Pressable
             onPress={() => router.push(isTv ? `/tv/${media.id}` : `/movie/${media.id}`)}
             className="flex-row items-center gap-2 rounded-xl bg-white/15 px-6 py-3 active:opacity-70">
-            <Ionicons name="information-circle-outline" size={18} color={Colors.text} />
+            <Ionicons name="information-circle-outline" size={18} color="#FFFFFF" />
             <Text className="text-base font-bold text-white">Info</Text>
           </Pressable>
         </View>
@@ -82,8 +84,9 @@ const HeroCard = memo(function HeroCard({
 const AUTO_SCROLL_INTERVAL = 2000;
 
 export function HeroBanner({ items, isLoading }: HeroBannerProps) {
+  const Colors = useThemeColors();
+  const heroGradient = useHeroGradient();
   const { width } = useWindowDimensions();
-  const height = Math.round(width * 1.25);
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList<HeroMedia>>(null);
   const activeIndexRef = useRef(0);
@@ -100,9 +103,13 @@ export function HeroBanner({ items, isLoading }: HeroBannerProps) {
 
   const viewabilityConfig = useMemo(() => ({ viewAreaCoveragePercentThreshold: 50 }), []);
 
+  const height = Math.round(width * 1.25);
+
   const renderItem = useCallback(
-    ({ item }: { item: HeroMedia }) => <HeroCard media={item} width={width} height={height} />,
-    [width, height],
+    ({ item }: { item: HeroMedia }) => (
+      <HeroCard media={item} width={width} height={height} gradient={heroGradient} />
+    ),
+    [width, height, heroGradient],
   );
 
   useEffect(() => {
