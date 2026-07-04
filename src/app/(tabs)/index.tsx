@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { isTmdbConfigured } from '@/api/client';
@@ -26,7 +26,10 @@ import { useOnTheAirTv, usePopularTv, useTopRatedTv, useTrendingTv } from '@/hoo
 import { avatarUrl } from '@/lib/avatar';
 import type { UnifiedGenre } from '@/lib/genres';
 import { movieToHero, tvToCard, tvToHero } from '@/lib/media';
+import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/stores/auth-store';
+
+const HERO_COUNT = 5;
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -37,6 +40,13 @@ export default function HomeScreen() {
   const [selectedGenre, setSelectedGenre] = useState<UnifiedGenre | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await queryClient.resetQueries({ type: 'active' });
+    setRefreshing(false);
+  }, []);
 
   const trending = useTrendingMovies();
   const popular = usePopularMovies();
@@ -53,6 +63,16 @@ export default function HomeScreen() {
   const tvGenreId = selectedGenre && section !== 'movies' ? selectedGenre.tvId : undefined;
   const genreMovies = useDiscoverMoviesByGenre(moviesGenreId);
   const genreTv = useDiscoverTvByGenre(tvGenreId);
+
+  const movieHeroes = useMemo(
+    () => trending.data?.results?.slice(0, HERO_COUNT).map(movieToHero),
+    [trending.data],
+  );
+
+  const tvHeroes = useMemo(
+    () => trendingTv.data?.results?.slice(0, HERO_COUNT).map(tvToHero),
+    [trendingTv.data],
+  );
 
   function toggleSection(next: HomeSection) {
     setSection((prev) => (prev === next ? 'home' : next));
@@ -77,9 +97,6 @@ export default function HomeScreen() {
       </View>
     );
   }
-
-  const movieHero = trending.data?.results?.[0];
-  const tvHero = trendingTv.data?.results?.[0];
 
   function renderContent() {
     if (selectedGenre) {
@@ -107,15 +124,12 @@ export default function HomeScreen() {
     if (section === 'movies') {
       return (
         <>
-          <HeroBanner
-            media={movieHero ? movieToHero(movieHero) : undefined}
-            isLoading={trending.isLoading}
-          />
+          <HeroBanner items={movieHeroes} isLoading={trending.isLoading} />
           <View className="pt-6">
             <ContinueWatchingRow />
             <MovieCarousel
               title="Trending"
-              movies={trending.data?.results?.slice(1)}
+              movies={trending.data?.results?.slice(HERO_COUNT)}
               isLoading={trending.isLoading}
             />
             <MovieCarousel title="Popular" movies={popular.data?.results} isLoading={popular.isLoading} />
@@ -129,12 +143,12 @@ export default function HomeScreen() {
     if (section === 'tv') {
       return (
         <>
-          <HeroBanner media={tvHero ? tvToHero(tvHero) : undefined} isLoading={trendingTv.isLoading} />
+          <HeroBanner items={tvHeroes} isLoading={trendingTv.isLoading} />
           <View className="pt-6">
             <ContinueWatchingRow />
             <MovieCarousel
               title="Trending"
-              movies={trendingTv.data?.results?.slice(1).map(tvToCard)}
+              movies={trendingTv.data?.results?.slice(HERO_COUNT).map(tvToCard)}
               isLoading={trendingTv.isLoading}
             />
             <MovieCarousel title="Popular" movies={popularTv.data?.results?.map(tvToCard)} isLoading={popularTv.isLoading} />
@@ -147,15 +161,12 @@ export default function HomeScreen() {
 
     return (
       <>
-        <HeroBanner
-          media={movieHero ? movieToHero(movieHero) : undefined}
-          isLoading={trending.isLoading}
-        />
+        <HeroBanner items={movieHeroes} isLoading={trending.isLoading} />
         <View className="pt-6">
           <ContinueWatchingRow />
           <MovieCarousel
             title="Trending Movies"
-            movies={trending.data?.results?.slice(1)}
+            movies={trending.data?.results?.slice(HERO_COUNT)}
             isLoading={trending.isLoading}
           />
           <MovieCarousel title="Trending Shows" movies={trendingTv.data?.results?.map(tvToCard)} isLoading={trendingTv.isLoading} />
@@ -203,7 +214,17 @@ export default function HomeScreen() {
         />
       </SafeAreaView>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={Colors.primary}
+            colors={[Colors.primary]}
+          />
+        }>
         {renderContent()}
       </ScrollView>
 

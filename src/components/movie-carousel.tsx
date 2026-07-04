@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { FlatList, View } from 'react-native';
 
 import { MovieCard } from '@/components/movie-card';
@@ -13,7 +14,7 @@ interface MovieCarouselProps {
   isLoading: boolean;
 }
 
-export function MovieCarousel({ title, movies, isLoading }: MovieCarouselProps) {
+export const MovieCarousel = memo(function MovieCarousel({ title, movies, isLoading }: MovieCarouselProps) {
   if (isLoading) {
     return (
       <View className="mb-7">
@@ -36,8 +37,11 @@ export function MovieCarousel({ title, movies, isLoading }: MovieCarouselProps) 
         keyExtractor={(item) => String(item.id)}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
+        initialNumToRender={5}
+        maxToRenderPerBatch={5}
+        windowSize={5}
         renderItem={({ item }) => <MovieCard movie={item} width={CARD_WIDTH} />}
       />
     </View>
   );
-}
+});

@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { posterUrl } from '@/api/client';
@@ -13,7 +14,7 @@ interface CollectionTileProps {
   width: number;
 }
 
-export function CollectionTile({ collection, width }: CollectionTileProps) {
+export const CollectionTile = memo(function CollectionTile({ collection, width }: CollectionTileProps) {
   const router = useRouter();
   const cover = posterUrl(collection.items[0]?.poster_path ?? null, 'w342');
   const count = collection.items.length;
@@ -46,4 +47,4 @@ export function CollectionTile({ collection, width }: CollectionTileProps) {
       </View>
     </Pressable>
   );
-}
+});

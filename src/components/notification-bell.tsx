@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { Badge } from 'react-native-paper';
 
 import { Colors } from '@/constants/theme';
 import { useUnreadNotificationCount } from '@/stores/notifications-store';
@@ -16,14 +17,10 @@ export function NotificationBell() {
       className="relative h-11 w-11 items-center justify-center rounded-xl bg-elevated active:opacity-70">
       <Ionicons name="notifications-outline" size={20} color={Colors.text} />
       {unread > 0 && (
-        <View
-          className="absolute h-[16px] min-w-[16px] items-center justify-center rounded-full bg-primary px-1"
-          style={{ top: -6, right: -6 }}>
-          <Text
-            className="text-[10px] font-bold text-white"
-            style={{ includeFontPadding: false, textAlignVertical: 'center' }}>
+        <View className="absolute" style={{ top: -4, right: -4 }}>
+          <Badge size={18} style={{ backgroundColor: Colors.primary, fontWeight: '700', fontSize: 10 }}>
             {unread > 99 ? '99+' : unread}
-          </Text>
+          </Badge>
         </View>
       )}
     </Pressable>

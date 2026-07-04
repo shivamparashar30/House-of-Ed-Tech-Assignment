@@ -10,6 +10,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import '@/global.css';
@@ -18,11 +19,21 @@ import { Colors } from '@/constants/theme';
 import { useDataSync } from '@/hooks/use-data-sync';
 import { useOnboardingWelcome } from '@/hooks/use-onboarding-welcome';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
-import { useSubscription } from '@/hooks/use-subscription';
 import { queryClient } from '@/lib/query-client';
-import { isSubscriptionActive, isSubscriptionEnforced } from '@/lib/subscription';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/auth-store';
+
+const paperTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    primary: Colors.primary,
+    surface: Colors.surface,
+    background: Colors.background,
+    onSurface: Colors.text,
+    outline: Colors.border,
+  },
+};
 
 const navigationTheme = {
   ...DarkTheme,
@@ -41,7 +52,6 @@ function useAuthGate() {
   const segments = useSegments();
   const router = useRouter();
   const navigationState = useRootNavigationState();
-  const { data: subscription, isLoading: subscriptionLoading } = useSubscription();
 
   useEffect(() => {
     useAuthStore.getState().initialize();
@@ -52,7 +62,6 @@ function useAuthGate() {
     if (!isSupabaseConfigured || status === 'loading') return;
 
     const inAuthScreen = segments[0] === 'auth';
-    const inPaywall = segments[0] === 'paywall';
 
     if (status === 'unauthenticated') {
       if (!inAuthScreen) router.replace('/auth');
@@ -63,20 +72,10 @@ function useAuthGate() {
       router.replace('/');
       return;
     }
-
-    // Wait for the subscription status to load so we don't flash the paywall.
-    if (!isSubscriptionEnforced || subscriptionLoading) return;
-
-    const active = isSubscriptionActive(subscription);
-    if (!active && !inPaywall) {
-      router.replace('/paywall');
-    } else if (active && inPaywall) {
-      router.replace('/');
-    }
-  }, [status, segments, router, navigationState?.key, subscription, subscriptionLoading]);
+  }, [status, segments, router, navigationState?.key]);
 }
 
-// Runs inside QueryClientProvider so the auth gate's subscription query has a client.
+// Runs inside QueryClientProvider so hooks that need a query client are available.
 function RootNavigator() {
   useAuthGate();
   useDataSync();
@@ -111,11 +110,13 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <RootNavigator />
-        </QueryClientProvider>
-      </SafeAreaProvider>
+      <PaperProvider theme={paperTheme}>
+        <SafeAreaProvider>
+          <QueryClientProvider client={queryClient}>
+            <RootNavigator />
+          </QueryClientProvider>
+        </SafeAreaProvider>
+      </PaperProvider>
     </GestureHandlerRootView>
   );
 }

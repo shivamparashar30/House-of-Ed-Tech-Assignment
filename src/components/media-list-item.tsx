@@ -1,19 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { posterUrl } from '@/api/client';
 import type { MediaCardItem } from '@/api/types';
 import { Colors } from '@/constants/theme';
+import { useFreeTierGuard } from '@/hooks/use-free-tier-guard';
 import { formatYear } from '@/lib/format';
 
 interface MediaListItemProps {
   item: MediaCardItem;
 }
 
-export function MediaListItem({ item }: MediaListItemProps) {
+export const MediaListItem = memo(function MediaListItem({ item }: MediaListItemProps) {
   const router = useRouter();
+  const { tryPlay } = useFreeTierGuard();
   const uri = posterUrl(item.poster_path, 'w342');
   const isTv = item.media_type === 'tv';
   const year = formatYear(item.release_date);
@@ -41,11 +44,13 @@ export function MediaListItem({ item }: MediaListItemProps) {
 
       <Pressable
         onPress={() =>
-          router.push(isTv ? `/player/${item.id}?type=tv&season=1&episode=1` : `/player/${item.id}`)
+          tryPlay(item.id, () =>
+            router.push(isTv ? `/player/${item.id}?type=tv&season=1&episode=1` : `/player/${item.id}`),
+          )
         }
         className="h-10 w-10 items-center justify-center rounded-full bg-primary active:opacity-80">
         <Ionicons name="play" size={18} color="#FFFFFF" />
       </Pressable>
     </View>
   );
-}
+});

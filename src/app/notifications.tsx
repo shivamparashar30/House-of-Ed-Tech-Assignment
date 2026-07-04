@@ -50,6 +50,9 @@ export default function NotificationsScreen() {
           data={items}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 20, paddingBottom: 40, gap: 12 }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           renderItem={({ item }) => (
             <Pressable
               onPress={() => handleOpen(item)}

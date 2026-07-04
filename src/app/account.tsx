@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { planLabel } from '@/constants/plans';
@@ -50,6 +51,10 @@ function MenuRow({
       <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
     </Pressable>
   );
+}
+
+function SectionLabel({ title }: { title: string }) {
+  return <Text className="mb-2 mt-4 px-1 text-xs font-semibold uppercase tracking-wider text-muted">{title}</Text>;
 }
 
 export default function AccountScreen() {
@@ -101,7 +106,8 @@ export default function AccountScreen() {
           <StatTile value={continueCount} label="Watching" />
         </View>
 
-        <View className="mt-5 gap-3">
+        <SectionLabel title="Library" />
+        <View className="gap-3">
           <MenuRow
             icon="bookmark-outline"
             label="My Watchlist"
@@ -109,10 +115,39 @@ export default function AccountScreen() {
             onPress={() => router.push('/watchlist')}
           />
           <MenuRow
+            icon="albums-outline"
+            label="My Collections"
+            trailing={String(collectionsCount)}
+            onPress={() => router.push('/watchlist')}
+          />
+        </View>
+
+        <Divider className="my-4" style={{ backgroundColor: Colors.border }} />
+
+        <SectionLabel title="Account" />
+        <View className="gap-3">
+          <MenuRow
             icon="card-outline"
             label="Subscription"
             trailing={isPremium ? planLabel(subscription?.planId) : 'Free'}
             onPress={() => router.push('/paywall')}
+          />
+          <MenuRow
+            icon="notifications-outline"
+            label="Notifications"
+            onPress={() => router.push('/notifications')}
+          />
+        </View>
+
+        <Divider className="my-4" style={{ backgroundColor: Colors.border }} />
+
+        <SectionLabel title="About" />
+        <View className="gap-3">
+          <MenuRow
+            icon="information-circle-outline"
+            label="App Version"
+            trailing="1.0.0"
+            onPress={() => {}}
           />
           <MenuRow
             icon="log-out-outline"

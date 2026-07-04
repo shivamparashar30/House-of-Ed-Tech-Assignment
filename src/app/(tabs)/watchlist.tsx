@@ -51,6 +51,9 @@ export default function LibraryScreen() {
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ gap: 12, paddingBottom: 24, paddingRight: 4 }}
+          initialNumToRender={4}
+          maxToRenderPerBatch={4}
+          windowSize={3}
           renderItem={({ item }) => <CollectionTile collection={item} width={TILE_WIDTH} />}
         />
       )}

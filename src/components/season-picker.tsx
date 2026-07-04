@@ -1,7 +1,8 @@
-import { FlatList, Pressable, Text } from 'react-native';
+import { FlatList } from 'react-native';
+import { Chip } from 'react-native-paper';
 
 import type { Season } from '@/api/types';
-import { cn } from '@/lib/cn';
+import { Colors } from '@/constants/theme';
 
 interface SeasonPickerProps {
   seasons: Season[];
@@ -17,19 +18,24 @@ export function SeasonPicker({ seasons, selectedSeason, onSelect }: SeasonPicker
       keyExtractor={(item) => String(item.id)}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
+      initialNumToRender={8}
+      maxToRenderPerBatch={8}
+      windowSize={3}
       renderItem={({ item }) => {
         const active = item.season_number === selectedSeason;
         return (
-          <Pressable
+          <Chip
+            selected={active}
             onPress={() => onSelect(item.season_number)}
-            className={cn(
-              'rounded-full px-4 py-2 active:opacity-80',
-              active ? 'bg-primary' : 'bg-elevated',
-            )}>
-            <Text className={cn('text-sm font-semibold', active ? 'text-white' : 'text-muted')}>
-              {item.name}
-            </Text>
-          </Pressable>
+            showSelectedCheck={false}
+            mode={active ? 'flat' : 'outlined'}
+            textStyle={{ fontSize: 13, fontWeight: '600', color: active ? '#FFFFFF' : Colors.textSecondary }}
+            style={{
+              backgroundColor: active ? Colors.primary : Colors.elevated,
+              borderColor: active ? Colors.primary : '#2A2A2A',
+            }}>
+            {item.name}
+          </Chip>
         );
       }}
     />

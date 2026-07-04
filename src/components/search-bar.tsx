@@ -1,5 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable, TextInput, View } from 'react-native';
+import { Searchbar } from 'react-native-paper';
 
 import { Colors } from '@/constants/theme';
 
@@ -11,31 +10,20 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChangeText, placeholder = 'Search movies' }: SearchBarProps) {
   return (
-    <View
-      className="flex-row items-center gap-2 rounded-2xl bg-elevated px-4"
-      style={{ height: 48 }}>
-      <Ionicons name="search" size={20} color={Colors.textSecondary} />
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={Colors.textSecondary}
-        autoCorrect={false}
-        returnKeyType="search"
-        className="h-full flex-1 text-base text-white"
-        style={{
-          paddingVertical: 0,
-          margin: 0,
-          includeFontPadding: false,
-          textAlignVertical: 'center',
-          lineHeight: 20,
-        }}
-      />
-      {value.length > 0 && (
-        <Pressable onPress={() => onChangeText('')} hitSlop={8} className="active:opacity-60">
-          <Ionicons name="close-circle" size={18} color={Colors.textSecondary} />
-        </Pressable>
-      )}
-    </View>
+    <Searchbar
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor={Colors.textSecondary}
+      iconColor={Colors.textSecondary}
+      inputStyle={{ color: Colors.text, fontSize: 15 }}
+      style={{
+        backgroundColor: Colors.elevated,
+        borderRadius: 16,
+        height: 48,
+      }}
+      autoCorrect={false}
+      returnKeyType="search"
+    />
   );
 }

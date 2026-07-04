@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { MediaCardItem } from '@/api/types';
@@ -7,19 +7,22 @@ import { EmptyState } from '@/components/empty-state';
 import { ErrorState } from '@/components/error-state';
 import { MediaListItem } from '@/components/media-list-item';
 import { PosterGrid } from '@/components/poster-grid';
+import { GridSkeleton, ListItemSkeleton } from '@/components/skeleton';
 import { SearchBar } from '@/components/search-bar';
 import { Colors } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTrendingMovies } from '@/hooks/use-movies';
-import { useSearchMulti } from '@/hooks/use-search';
+import { useInfiniteSearchMulti, useSearchMulti } from '@/hooks/use-search';
 import { useTrendingTv } from '@/hooks/use-tv';
 import { relaxQuery, similarity } from '@/lib/fuzzy';
 import { movieToCard, multiToCards, tvToCard } from '@/lib/media';
 
-function Spinner() {
+function RecommendationSkeleton() {
   return (
-    <View className="items-center justify-center py-24">
-      <ActivityIndicator color={Colors.primary} />
+    <View className="gap-1 px-4 pt-4">
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <ListItemSkeleton key={i} />
+      ))}
     </View>
   );
 }
@@ -34,8 +37,21 @@ export default function SearchScreen() {
   const trimmed = debouncedQuery.trim();
   const isSearching = trimmed.length > 0;
 
-  const { data, isLoading, isError, error, refetch } = useSearchMulti(trimmed);
-  const exactResults = useMemo(() => multiToCards(data?.results ?? []), [data]);
+  const {
+    data: infiniteData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteSearchMulti(trimmed);
+
+  const exactResults = useMemo(
+    () => multiToCards(infiniteData?.pages.flatMap((p) => p.results) ?? []),
+    [infiniteData],
+  );
 
   const needsFallback = isSearching && !isLoading && exactResults.length === 0;
   const fallbackQuery = needsFallback ? relaxQuery(trimmed) : '';
@@ -64,9 +80,15 @@ export default function SearchScreen() {
   }, [trendingMovies.data, trendingTv.data]);
   const recommendationsLoading = trendingMovies.isLoading || trendingTv.isLoading;
 
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   function renderContent() {
     if (!isSearching) {
-      if (recommendationsLoading) return <Spinner />;
+      if (recommendationsLoading) return <RecommendationSkeleton />;
       return (
         <FlatList
           data={recommendations}
@@ -74,13 +96,27 @@ export default function SearchScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           ListHeaderComponent={<SectionTitle title="Recommended Shows & Movies" />}
           renderItem={({ item }) => <MediaListItem item={item} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => {
+                trendingMovies.refetch();
+                trendingTv.refetch();
+              }}
+              tintColor={Colors.primary}
+              colors={[Colors.primary]}
+            />
+          }
         />
       );
     }
 
-    if (searchLoading) return <Spinner />;
+    if (searchLoading) return <GridSkeleton />;
 
     if (isError) return <ErrorState message={error?.message} onRetry={() => refetch()} />;
 
@@ -89,12 +125,24 @@ export default function SearchScreen() {
         <EmptyState
           icon="sad-outline"
           title="No results found"
-          message={`We couldn’t find anything matching “${trimmed}”.`}
+          message={`We couldn't find anything matching "${trimmed}".`}
         />
       );
     }
 
-    return <PosterGrid movies={results} />;
+    return (
+      <PosterGrid
+        movies={results}
+        onEndReached={handleEndReached}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <View className="items-center py-6">
+              <ActivityIndicator color={Colors.primary} />
+            </View>
+          ) : undefined
+        }
+      />
+    );
   }
 
   return (

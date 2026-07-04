@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 
 import { ContinueWatchingCard } from '@/components/continue-watching-card';
@@ -6,9 +7,14 @@ import { useContinueWatchingStore } from '@/stores/continue-watching-store';
 
 const CARD_WIDTH = 248;
 
-export function ContinueWatchingRow() {
+export const ContinueWatchingRow = memo(function ContinueWatchingRow() {
   const items = useContinueWatchingStore((state) => state.items);
   const remove = useContinueWatchingStore((state) => state.remove);
+
+  const handleRemove = useCallback(
+    (id: number) => remove(id),
+    [remove],
+  );
 
   if (items.length === 0) return null;
 
@@ -21,14 +27,17 @@ export function ContinueWatchingRow() {
         keyExtractor={(item) => String(item.id)}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
+        initialNumToRender={3}
+        maxToRenderPerBatch={3}
+        windowSize={3}
         renderItem={({ item }) => (
           <ContinueWatchingCard
             item={item}
             width={CARD_WIDTH}
-            onRemove={() => remove(item.id)}
+            onRemove={() => handleRemove(item.id)}
           />
         )}
       />
     </View>
   );
-}
+});

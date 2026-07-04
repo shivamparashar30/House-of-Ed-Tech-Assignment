@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { memo } from 'react';
 import { type DimensionValue, Pressable, Text, View } from 'react-native';
 
 import { backdropUrl, posterUrl } from '@/api/client';
@@ -13,7 +14,7 @@ interface ContinueWatchingCardProps {
   onRemove: () => void;
 }
 
-export function ContinueWatchingCard({ item, width, onRemove }: ContinueWatchingCardProps) {
+export const ContinueWatchingCard = memo(function ContinueWatchingCard({ item, width, onRemove }: ContinueWatchingCardProps) {
   const router = useRouter();
   const uri = backdropUrl(item.backdrop_path, 'w780') ?? posterUrl(item.poster_path);
   const progressPercent = `${Math.min(100, Math.round(item.progress * 100))}%` as DimensionValue;
@@ -67,4 +68,4 @@ export function ContinueWatchingCard({ item, width, onRemove }: ContinueWatching
       {subtitle ? <Text className="text-xs text-muted">{subtitle}</Text> : null}
     </Pressable>
   );
-}
+});

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { posterUrl } from '@/api/client';
@@ -16,7 +17,7 @@ interface MovieCardProps {
   onRemove?: () => void;
 }
 
-export function MovieCard({ movie, width, showMeta = false, onRemove }: MovieCardProps) {
+export const MovieCard = memo(function MovieCard({ movie, width, showMeta = false, onRemove }: MovieCardProps) {
   const router = useRouter();
   const uri = posterUrl(movie.poster_path);
 
@@ -68,4 +69,4 @@ export function MovieCard({ movie, width, showMeta = false, onRemove }: MovieCar
       )}
     </Pressable>
   );
-}
+});

@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Chip } from 'react-native-paper';
 
 import { Colors } from '@/constants/theme';
-import { cn } from '@/lib/cn';
 
 export type HomeSection = 'home' | 'movies' | 'tv';
 
@@ -14,34 +14,6 @@ interface HomeFilterBarProps {
   onCategories: () => void;
 }
 
-function Chip({
-  label,
-  active,
-  onPress,
-  trailingIcon,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-  trailingIcon?: boolean;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={cn(
-        'flex-row items-center gap-1 rounded-full border px-4 py-1.5 active:opacity-80',
-        active ? 'border-primary bg-primary' : 'border-[#2A2A2A] bg-elevated',
-      )}>
-      <Text className={cn('text-sm font-semibold', active ? 'text-white' : 'text-muted')}>
-        {label}
-      </Text>
-      {trailingIcon && (
-        <Ionicons name="chevron-down" size={14} color={active ? '#FFFFFF' : Colors.textSecondary} />
-      )}
-    </Pressable>
-  );
-}
-
 export function HomeFilterBar({
   section,
   selectedGenreName,
@@ -51,14 +23,44 @@ export function HomeFilterBar({
 }: HomeFilterBarProps) {
   return (
     <View className="flex-row gap-2 px-5 py-3">
-      <Chip label="Movies" active={section === 'movies'} onPress={onMovies} />
-      <Chip label="TV Shows" active={section === 'tv'} onPress={onTv} />
       <Chip
-        label={selectedGenreName ?? 'Categories'}
-        active={Boolean(selectedGenreName)}
+        selected={section === 'movies'}
+        onPress={onMovies}
+        showSelectedCheck={false}
+        mode={section === 'movies' ? 'flat' : 'outlined'}
+        textStyle={{ fontSize: 13, fontWeight: '600', color: section === 'movies' ? '#FFFFFF' : Colors.textSecondary }}
+        style={{
+          backgroundColor: section === 'movies' ? Colors.primary : Colors.elevated,
+          borderColor: section === 'movies' ? Colors.primary : '#2A2A2A',
+        }}>
+        Movies
+      </Chip>
+      <Chip
+        selected={section === 'tv'}
+        onPress={onTv}
+        showSelectedCheck={false}
+        mode={section === 'tv' ? 'flat' : 'outlined'}
+        textStyle={{ fontSize: 13, fontWeight: '600', color: section === 'tv' ? '#FFFFFF' : Colors.textSecondary }}
+        style={{
+          backgroundColor: section === 'tv' ? Colors.primary : Colors.elevated,
+          borderColor: section === 'tv' ? Colors.primary : '#2A2A2A',
+        }}>
+        TV Shows
+      </Chip>
+      <Chip
+        selected={Boolean(selectedGenreName)}
         onPress={onCategories}
-        trailingIcon
-      />
+        showSelectedCheck={false}
+        mode={selectedGenreName ? 'flat' : 'outlined'}
+        closeIcon={() => <Ionicons name="chevron-down" size={14} color={selectedGenreName ? '#FFFFFF' : Colors.textSecondary} />}
+        onClose={onCategories}
+        textStyle={{ fontSize: 13, fontWeight: '600', color: selectedGenreName ? '#FFFFFF' : Colors.textSecondary }}
+        style={{
+          backgroundColor: selectedGenreName ? Colors.primary : Colors.elevated,
+          borderColor: selectedGenreName ? Colors.primary : '#2A2A2A',
+        }}>
+        {selectedGenreName ?? 'Categories'}
+      </Chip>
     </View>
   );
 }
