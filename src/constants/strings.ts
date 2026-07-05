@@ -3,14 +3,9 @@
  * Keeps screen components data-driven and makes future i18n feasible.
  */
 
-// ---------------------------------------------------------------------------
 // App-wide
-// ---------------------------------------------------------------------------
 export const APP_NAME = 'BingeBox';
 
-// ---------------------------------------------------------------------------
-// Home / Discovery
-// ---------------------------------------------------------------------------
 export const HOME_TITLES = {
   trending: 'Trending',
   popular: 'Popular',
@@ -32,9 +27,6 @@ export const FILTER_LABELS = {
   categories: 'Categories',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Search
-// ---------------------------------------------------------------------------
 export const SEARCH = {
   placeholder: 'Movies, shows, genres',
   recommended: 'Recommended Shows & Movies',
@@ -42,9 +34,6 @@ export const SEARCH = {
   noResultsHint: 'Try adjusting your search or check for typos.',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Library / Watchlist
-// ---------------------------------------------------------------------------
 export const LIBRARY = {
   title: 'My Library',
   watchlist: 'Watchlist',
@@ -56,9 +45,6 @@ export const LIBRARY = {
   emptyWatchlistHint: 'Bookmark movies and shows to find them here.',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Detail Screens
-// ---------------------------------------------------------------------------
 export const DETAIL = {
   overview: 'Overview',
   moreLikeThis: 'More Like This',
@@ -67,16 +53,10 @@ export const DETAIL = {
   resume: 'Resume',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Continue Watching
-// ---------------------------------------------------------------------------
 export const CONTINUE_WATCHING = {
   title: 'Continue Watching',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Account / Profile
-// ---------------------------------------------------------------------------
 export const ACCOUNT = {
   title: 'Profile',
   statWatchlist: 'Watchlist',
@@ -95,9 +75,6 @@ export const ACCOUNT = {
   darkMode: 'Dark Mode',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Paywall / Subscription
-// ---------------------------------------------------------------------------
 export const PAYWALL = {
   goPremium: 'Go Premium',
   subtitle: 'Subscribe to unlock the full BingeBox experience.',
@@ -120,9 +97,6 @@ export const PLAN_BENEFITS = [
   'Resume across all your devices',
 ] as const;
 
-// ---------------------------------------------------------------------------
-// Notifications
-// ---------------------------------------------------------------------------
 export const NOTIFICATIONS = {
   title: 'Notifications',
   clear: 'Clear',
@@ -134,18 +108,12 @@ export const NOTIFICATIONS = {
   },
 } as const;
 
-// ---------------------------------------------------------------------------
-// Auth
-// ---------------------------------------------------------------------------
 export const AUTH = {
   prompt: 'Please enter your email and password.',
   signupSuccess: 'Account created. Check your email to confirm, then sign in.',
   defaultName: 'BingeBox User',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Error / Empty States
-// ---------------------------------------------------------------------------
 export const ERROR = {
   defaultTitle: 'Something went wrong',
   defaultMessage: "We couldn't load this content. Please try again.",
@@ -153,9 +121,6 @@ export const ERROR = {
   playerFailed: 'This title could not be played right now.',
 } as const;
 
-// ---------------------------------------------------------------------------
-// Checkout
-// ---------------------------------------------------------------------------
 export const CHECKOUT = {
   title: 'Complete payment',
 } as const;

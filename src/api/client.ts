@@ -9,17 +9,11 @@ export const isTmdbConfigured = Boolean(
   ACCESS_TOKEN && ACCESS_TOKEN !== 'your_tmdb_v4_read_access_token_here',
 );
 
-/**
- * When true, all TMDB requests resolve from an in-memory mock data store
- * with artificial network delay — no real API calls are made.
- * Enable by setting  EXPO_PUBLIC_USE_MOCK_API=true  in your .env file.
- */
 export const useMockApi = process.env.EXPO_PUBLIC_USE_MOCK_API === 'true';
 
 type QueryParams = Record<string, string | number | undefined>;
 
 export async function tmdbGet<T>(path: string, params: QueryParams = {}): Promise<T> {
-  // Delegate to mock service layer when mock mode is enabled
   if (useMockApi) {
     return mockGet<T>(path, params);
   }

@@ -28,12 +28,8 @@ import { AnimatedSplash } from '@/components/animated-splash';
 import { useAuthStore } from '@/stores/auth-store';
 import { useThemeStore } from '@/stores/theme-store';
 
-// Set dark mode immediately before any component renders
 colorScheme.set('dark');
 
-// Pre-computed CSS variable overrides — applied on the root view so all children
-// inherit correct values from the very first frame, bypassing the .dark:root
-// class-based timing issue in NativeWind.
 const darkCssVars = vars({
   '--color-background': '15 15 15',
   '--color-surface': '18 18 18',
@@ -57,7 +53,6 @@ const lightCssVars = vars({
   '--color-border': '229 231 235',
 });
 
-// Pre-computed — avoids object allocation on every render
 const darkNavTheme = {
   ...DarkTheme,
   colors: { ...DarkTheme.colors, background: DarkColors.background, card: DarkColors.background, text: DarkColors.text, border: DarkColors.border, primary: DarkColors.primary },
@@ -103,7 +98,6 @@ function useAuthGate() {
   }, [status, segments, router, navigationState?.key]);
 }
 
-// Runs inside QueryClientProvider so hooks that need a query client are available.
 function RootNavigator() {
   useAuthGate();
   useDataSync();
@@ -117,12 +111,10 @@ function RootNavigator() {
     useThemeStore.getState().initialize();
   }, []);
 
-  // Sync NativeWind with the Zustand store
   useLayoutEffect(() => {
     setColorScheme(mode);
   }, [mode, setColorScheme]);
 
-  // Single NativeWind subscription for the entire app
   const { isDark, colors } = useResolvedTheme();
   const navigationTheme = isDark ? darkNavTheme : lightNavTheme;
   const paperTheme = isDark ? darkPaperTheme : lightPaperTheme;
@@ -162,8 +154,6 @@ export default function RootLayout() {
   const [splashDone, setSplashDone] = useState(false);
   const handleSplashComplete = useCallback(() => setSplashDone(true), []);
 
-  // Subscribe to theme mode at the root level so CSS variables are injected
-  // on the outermost view from the very first frame.
   const mode = useThemeStore((s) => s.mode);
   const { colorScheme: systemScheme } = useColorScheme();
   const isDark = mode === 'system' ? systemScheme !== 'light' : mode === 'dark';

@@ -13,9 +13,6 @@ import type {
   TVShow,
 } from '@/api/types';
 
-// ---------------------------------------------------------------------------
-// Genres
-// ---------------------------------------------------------------------------
 
 export const MOCK_MOVIE_GENRES: Genre[] = [
   { id: 28, name: 'Action' },
@@ -41,9 +38,6 @@ export const MOCK_TV_GENRES: Genre[] = [
   { id: 10766, name: 'Soap' },
 ];
 
-// ---------------------------------------------------------------------------
-// Movies
-// ---------------------------------------------------------------------------
 
 const mockMovieBase: Movie[] = [
   {
@@ -148,9 +142,6 @@ const mockMovieBase: Movie[] = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// TV Shows
-// ---------------------------------------------------------------------------
 
 const mockTvBase: TVShow[] = [
   {
@@ -235,9 +226,6 @@ const mockTvBase: TVShow[] = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Cast
-// ---------------------------------------------------------------------------
 
 const mockCast: CastMember[] = [
   { id: 3001, name: 'Alex Rivera', character: 'Commander Hayes', profile_path: null },
@@ -249,9 +237,6 @@ const mockCast: CastMember[] = [
 
 const mockCredits: Credits = { cast: mockCast, crew: [] };
 
-// ---------------------------------------------------------------------------
-// Movie Detail
-// ---------------------------------------------------------------------------
 
 export function buildMockMovieDetail(id: number): MovieDetails {
   const base = mockMovieBase.find((m) => m.id === id) ?? mockMovieBase[0];
@@ -266,9 +251,6 @@ export function buildMockMovieDetail(id: number): MovieDetails {
   };
 }
 
-// ---------------------------------------------------------------------------
-// TV Detail
-// ---------------------------------------------------------------------------
 
 const mockSeasons: Season[] = [
   { id: 4001, season_number: 1, name: 'Season 1', episode_count: 8, poster_path: null, air_date: '2024-09-10', overview: '' },
@@ -291,9 +273,6 @@ export function buildMockTvDetail(id: number): TVDetails {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Season Detail
-// ---------------------------------------------------------------------------
 
 export function buildMockSeasonDetail(seasonNumber: number): SeasonDetails {
   const count = seasonNumber === 1 ? 8 : 10;
@@ -311,9 +290,6 @@ export function buildMockSeasonDetail(seasonNumber: number): SeasonDetails {
   return { id: 4000 + seasonNumber, season_number: seasonNumber, name: `Season ${seasonNumber}`, episodes };
 }
 
-// ---------------------------------------------------------------------------
-// Search
-// ---------------------------------------------------------------------------
 
 export function buildMockSearchResults(query: string): Paginated<MultiSearchItem> {
   const q = query.toLowerCase();
@@ -326,9 +302,6 @@ export function buildMockSearchResults(query: string): Paginated<MultiSearchItem
   return paginate([...movieResults, ...tvResults]);
 }
 
-// ---------------------------------------------------------------------------
-// Discover by Genre
-// ---------------------------------------------------------------------------
 
 export function buildMockDiscoverMovies(genreId: number): Paginated<Movie> {
   const matches = mockMovieBase.filter((m) => m.genre_ids?.includes(genreId));
@@ -340,9 +313,6 @@ export function buildMockDiscoverTv(genreId: number): Paginated<TVShow> {
   return paginate(matches.length > 0 ? matches : mockTvBase.slice(0, 4));
 }
 
-// ---------------------------------------------------------------------------
-// Paginated Lists
-// ---------------------------------------------------------------------------
 
 export const MOCK_TRENDING_MOVIES: Paginated<Movie> = paginate(mockMovieBase.slice(0, 6));
 export const MOCK_POPULAR_MOVIES: Paginated<Movie> = paginate(mockMovieBase.slice(2, 8));
@@ -354,9 +324,6 @@ export const MOCK_POPULAR_TV: Paginated<TVShow> = paginate(mockTvBase.slice(2, 7
 export const MOCK_TOP_RATED_TV: Paginated<TVShow> = paginate(mockTvBase.filter((t) => t.vote_average >= 8.0));
 export const MOCK_ON_AIR_TV: Paginated<TVShow> = paginate(mockTvBase.slice(3));
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function paginate<T>(results: T[]): Paginated<T> {
   return { page: 1, results, total_pages: 1, total_results: results.length };

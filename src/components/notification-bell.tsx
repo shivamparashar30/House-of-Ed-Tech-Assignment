@@ -26,13 +26,11 @@ export function NotificationBell() {
 
   useEffect(() => {
     if (unread > prevUnread.current) {
-      // New notification arrived — shake the bell
       rotation.value = withSequence(
         withTiming(-15, { duration: 60 }),
         withRepeat(withSequence(withTiming(15, { duration: 80 }), withTiming(-15, { duration: 80 })), 3, true),
         withTiming(0, { duration: 60 }),
       );
-      // Bounce the badge in
       badgeScale.value = withSequence(
         withSpring(1.4, { damping: 8, stiffness: 400 }),
         withSpring(1, { damping: 10, stiffness: 300 }),

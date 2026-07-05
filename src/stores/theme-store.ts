@@ -17,11 +17,8 @@ export const useThemeStore = create<ThemeState>((set) => ({
   mode: 'dark',
 
   setMode: (mode) => {
-    // 1. Update NativeWind immediately (CSS variables switch)
     colorScheme.set(mode);
-    // 2. Update Zustand state (re-renders subscribers)
     set({ mode });
-    // 3. Persist after UI settles — don't block the tap
     InteractionManager.runAfterInteractions(() => {
       AsyncStorage.setItem(STORAGE_KEY, mode);
     });
