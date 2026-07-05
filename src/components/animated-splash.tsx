@@ -1,6 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import Animated, {
   Easing,
   runOnJS,
@@ -12,6 +11,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const TOTAL_DURATION = 2200;
+
+const appIcon = require('@/assets/images/icon.png');
 
 export function AnimatedSplash({ onComplete }: { onComplete: () => void }) {
   const [visible, setVisible] = useState(true);
@@ -82,17 +83,10 @@ export function AnimatedSplash({ onComplete }: { onComplete: () => void }) {
       ]}>
       <View style={{ alignItems: 'center', gap: 16 }}>
         <Animated.View style={iconStyle}>
-          <View
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 20,
-              backgroundColor: '#E50914',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Ionicons name="film" size={36} color="#FFFFFF" />
-          </View>
+          <Image
+            source={appIcon}
+            style={{ width: 100, height: 100, borderRadius: 22 }}
+          />
         </Animated.View>
 
         <Animated.View style={textStyle}>

@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { Chip } from 'react-native-paper';
 
+import { FILTER_LABELS } from '@/constants/strings';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 
 export type HomeSection = 'home' | 'movies' | 'tv';
@@ -34,7 +35,7 @@ export function HomeFilterBar({
           backgroundColor: section === 'movies' ? Colors.primary : Colors.elevated,
           borderColor: section === 'movies' ? Colors.primary : Colors.border,
         }}>
-        Movies
+        {FILTER_LABELS.movies}
       </Chip>
       <Chip
         selected={section === 'tv'}
@@ -46,7 +47,7 @@ export function HomeFilterBar({
           backgroundColor: section === 'tv' ? Colors.primary : Colors.elevated,
           borderColor: section === 'tv' ? Colors.primary : Colors.border,
         }}>
-        TV Shows
+        {FILTER_LABELS.tvShows}
       </Chip>
       <Chip
         selected={Boolean(selectedGenreName)}
@@ -60,7 +61,7 @@ export function HomeFilterBar({
           backgroundColor: selectedGenreName ? Colors.primary : Colors.elevated,
           borderColor: selectedGenreName ? Colors.primary : Colors.border,
         }}>
-        {selectedGenreName ?? 'Categories'}
+        {selectedGenreName ?? FILTER_LABELS.categories}
       </Chip>
     </View>
   );

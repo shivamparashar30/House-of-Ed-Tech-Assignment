@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CheckoutWebView } from '@/components/checkout-webview';
 import { DEFAULT_PLAN_ID, PLANS, planLabel, type Plan } from '@/constants/plans';
+import { NOTIFICATIONS, PAYWALL, PLAN_BENEFITS } from '@/constants/strings';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useCreateCheckout } from '@/hooks/use-create-checkout';
 import { useSubscription } from '@/hooks/use-subscription';
@@ -14,13 +15,9 @@ import { useVerifySubscription } from '@/hooks/use-verify-subscription';
 import { cn } from '@/lib/cn';
 import { isSubscriptionActive } from '@/lib/subscription';
 import { useAuthStore } from '@/stores/auth-store';
+import { useNotificationsStore } from '@/stores/notifications-store';
 
-const PLAN_BENEFITS = [
-  'Unlimited streaming, ad-free',
-  'Full HD playback on every title',
-  'Watchlist & collections synced to your account',
-  'Resume across all your devices',
-];
+// UI text imported from @/constants/strings (PLAN_BENEFITS, PAYWALL)
 
 function Benefit({ label }: { label: string }) {
   const Colors = useThemeColors();
@@ -101,13 +98,13 @@ function ActiveSubscriptionView() {
           <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/15">
             <Ionicons name="shield-checkmark" size={32} color={Colors.primary} />
           </View>
-          <Text className="mt-2 text-xl font-extrabold text-foreground">Premium Active</Text>
-          <Text className="text-sm text-muted">You have full access to BingeBox</Text>
+          <Text className="mt-2 text-xl font-extrabold text-foreground">{PAYWALL.premiumActive}</Text>
+          <Text className="text-sm text-muted">{PAYWALL.premiumSubtitle}</Text>
         </View>
 
         <View className="mt-6 gap-3">
           <View className="flex-row items-center justify-between rounded-2xl bg-elevated px-4 py-4">
-            <Text className="text-sm text-muted">Plan</Text>
+            <Text className="text-sm text-muted">{PAYWALL.planLabel}</Text>
             <Text className="text-base font-bold text-foreground">
               {planLabel(subscription?.planId)}
             </Text>
@@ -115,7 +112,7 @@ function ActiveSubscriptionView() {
 
           {currentPlan ? (
             <View className="flex-row items-center justify-between rounded-2xl bg-elevated px-4 py-4">
-              <Text className="text-sm text-muted">Price</Text>
+              <Text className="text-sm text-muted">{PAYWALL.priceLabel}</Text>
               <Text className="text-base font-bold text-foreground">
                 {currentPlan.price} / {currentPlan.period}
               </Text>
@@ -123,7 +120,7 @@ function ActiveSubscriptionView() {
           ) : null}
 
           <View className="flex-row items-center justify-between rounded-2xl bg-elevated px-4 py-4">
-            <Text className="text-sm text-muted">Status</Text>
+            <Text className="text-sm text-muted">{PAYWALL.statusLabel}</Text>
             <View className="flex-row items-center gap-1.5">
               <View className="h-2 w-2 rounded-full bg-[#22C55E]" />
               <Text className="text-base font-bold text-[#22C55E]">
@@ -134,7 +131,7 @@ function ActiveSubscriptionView() {
 
           {subscription?.currentPeriodEnd ? (
             <View className="flex-row items-center justify-between rounded-2xl bg-elevated px-4 py-4">
-              <Text className="text-sm text-muted">Renews on</Text>
+              <Text className="text-sm text-muted">{PAYWALL.renewsOn}</Text>
               <Text className="text-base font-bold text-foreground">
                 {formatDate(subscription.currentPeriodEnd)}
               </Text>
@@ -144,7 +141,7 @@ function ActiveSubscriptionView() {
 
         <View className="mt-8 gap-4">
           <Text className="px-1 text-xs font-semibold uppercase tracking-wider text-muted">
-            Your benefits
+            {PAYWALL.yourBenefits}
           </Text>
           {PLAN_BENEFITS.map((benefit) => (
             <Benefit key={benefit} label={benefit} />
@@ -197,6 +194,12 @@ export default function PaywallScreen() {
     justSubscribed.current = true;
     verifySubscription.mutate(undefined, {
       onSuccess: () => {
+        useNotificationsStore.getState().add({
+          id: `premium-${Date.now()}`,
+          title: NOTIFICATIONS.paymentSuccess.title,
+          body: NOTIFICATIONS.paymentSuccess.body,
+          receivedAt: Date.now(),
+        });
         router.back();
       },
       onError: (error) => {
@@ -220,9 +223,9 @@ export default function PaywallScreen() {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(100).duration(400).springify()}>
-          <Text className="mb-1 text-2xl font-extrabold text-foreground">Go Premium</Text>
+          <Text className="mb-1 text-2xl font-extrabold text-foreground">{PAYWALL.goPremium}</Text>
           <Text className="mb-6 text-sm text-muted">
-            Subscribe to unlock the full BingeBox experience.
+            {PAYWALL.subtitle}
           </Text>
         </Animated.View>
 
@@ -255,7 +258,7 @@ export default function PaywallScreen() {
             {busy ? (
               <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text className="text-base font-bold text-white">Subscribe</Text>
+              <Text className="text-base font-bold text-white">{PAYWALL.subscribe}</Text>
             )}
           </Pressable>
 
@@ -263,7 +266,7 @@ export default function PaywallScreen() {
             onPress={() => signOut()}
             className="mt-5 flex-row justify-center active:opacity-70">
             <Text className="text-sm text-muted">
-              Not now? <Text className="font-bold text-foreground">Sign out</Text>
+              {PAYWALL.notNow} <Text className="font-bold text-foreground">{PAYWALL.signOut}</Text>
             </Text>
           </Pressable>
         </Animated.View>

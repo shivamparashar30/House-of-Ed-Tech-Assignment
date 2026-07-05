@@ -19,6 +19,7 @@ import {
 
 import { vidkingEmbedUrl, vidkingTvEmbedUrl } from '@/api/client';
 import { ErrorState } from '@/components/error-state';
+import { ERROR } from '@/constants/strings';
 import { Colors } from '@/constants/theme';
 import { useMovieDetail } from '@/hooks/use-movies';
 import { useTvDetail } from '@/hooks/use-tv';
@@ -256,7 +257,7 @@ export default function PlayerScreen() {
 
       {failed ? (
         <ErrorState
-          message="This title could not be played right now."
+          message={ERROR.playerFailed}
           onRetry={() => {
             setFailed(false);
             setLoading(true);

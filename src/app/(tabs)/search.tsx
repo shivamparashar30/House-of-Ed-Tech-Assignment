@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { MediaCardItem } from '@/api/types';
+import { SEARCH } from '@/constants/strings';
 import { EmptyState } from '@/components/empty-state';
 import { ErrorState } from '@/components/error-state';
 import { MediaListItem } from '@/components/media-list-item';
@@ -100,7 +101,7 @@ export default function SearchScreen() {
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           windowSize={5}
-          ListHeaderComponent={<SectionTitle title="Recommended Shows & Movies" />}
+          ListHeaderComponent={<SectionTitle title={SEARCH.recommended} />}
           renderItem={({ item }) => <MediaListItem item={item} />}
           refreshControl={
             <RefreshControl
@@ -126,7 +127,7 @@ export default function SearchScreen() {
         <EmptyState
           icon="sad-outline"
           title="No results found"
-          message={`We couldn't find anything matching "${trimmed}".`}
+          message={SEARCH.noResults(trimmed)}
         />
       );
     }
@@ -150,7 +151,7 @@ export default function SearchScreen() {
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <View className="px-4 pb-3 pt-2">
         <Text className="mb-4 text-2xl font-extrabold text-foreground">Search</Text>
-        <SearchBar value={query} onChangeText={setQuery} placeholder="Movies, shows, genres" />
+        <SearchBar value={query} onChangeText={setQuery} placeholder={SEARCH.placeholder} />
       </View>
       <View className="flex-1">{renderContent()}</View>
     </SafeAreaView>

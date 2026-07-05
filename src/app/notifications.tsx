@@ -6,6 +6,7 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/empty-state';
+import { NOTIFICATIONS } from '@/constants/strings';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { cn } from '@/lib/cn';
 import { formatRelativeTime } from '@/lib/format';
@@ -32,11 +33,11 @@ export default function NotificationsScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8} className="active:opacity-70">
           <Ionicons name="chevron-back" size={26} color={Colors.text} />
         </Pressable>
-        <Text className="text-2xl font-extrabold text-foreground">Notifications</Text>
+        <Text className="text-2xl font-extrabold text-foreground">{NOTIFICATIONS.title}</Text>
         <View className="flex-1" />
         {items.length > 0 && (
           <Pressable onPress={clear} hitSlop={8} className="active:opacity-70">
-            <Text className="text-sm font-semibold text-muted">Clear</Text>
+            <Text className="text-sm font-semibold text-muted">{NOTIFICATIONS.clear}</Text>
           </Pressable>
         )}
       </View>
@@ -44,8 +45,8 @@ export default function NotificationsScreen() {
       {items.length === 0 ? (
         <EmptyState
           icon="notifications-off-outline"
-          title="No notifications yet"
-          message="Updates and alerts from BingeBox will show up here."
+          title={NOTIFICATIONS.emptyTitle}
+          message={NOTIFICATIONS.emptyMessage}
         />
       ) : (
         <FlatList

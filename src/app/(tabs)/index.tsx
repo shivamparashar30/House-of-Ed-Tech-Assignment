@@ -6,6 +6,7 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { isTmdbConfigured } from '@/api/client';
+import { FILTER_LABELS, HOME_TITLES } from '@/constants/strings';
 import { ContinueWatchingRow } from '@/components/continue-watching-row';
 import { EmptyState } from '@/components/empty-state';
 import { GenreDropdown } from '@/components/genre-dropdown';
@@ -106,14 +107,14 @@ export default function HomeScreen() {
           <Text className="px-5 pb-4 text-2xl font-extrabold text-foreground">{selectedGenre.name}</Text>
           {section !== 'tv' && (
             <MovieCarousel
-              title="Movies"
+              title={FILTER_LABELS.movies}
               movies={genreMovies.data?.results}
               isLoading={Boolean(moviesGenreId) && genreMovies.isLoading}
             />
           )}
           {section !== 'movies' && (
             <MovieCarousel
-              title="TV Shows"
+              title={FILTER_LABELS.tvShows}
               movies={genreTv.data?.results?.map(tvToCard)}
               isLoading={Boolean(tvGenreId) && genreTv.isLoading}
             />
@@ -129,13 +130,13 @@ export default function HomeScreen() {
           <View className="pt-6">
             <ContinueWatchingRow />
             <MovieCarousel
-              title="Trending"
+              title={HOME_TITLES.trending}
               movies={trending.data?.results?.slice(HERO_COUNT)}
               isLoading={trending.isLoading}
             />
-            <MovieCarousel title="Popular" movies={popular.data?.results} isLoading={popular.isLoading} />
-            <MovieCarousel title="Top Rated" movies={topRated.data?.results} isLoading={topRated.isLoading} />
-            <MovieCarousel title="Upcoming" movies={upcoming.data?.results} isLoading={upcoming.isLoading} />
+            <MovieCarousel title={HOME_TITLES.popular} movies={popular.data?.results} isLoading={popular.isLoading} />
+            <MovieCarousel title={HOME_TITLES.topRated} movies={topRated.data?.results} isLoading={topRated.isLoading} />
+            <MovieCarousel title={HOME_TITLES.upcoming} movies={upcoming.data?.results} isLoading={upcoming.isLoading} />
           </View>
         </>
       );
@@ -148,13 +149,13 @@ export default function HomeScreen() {
           <View className="pt-6">
             <ContinueWatchingRow />
             <MovieCarousel
-              title="Trending"
+              title={HOME_TITLES.trending}
               movies={trendingTv.data?.results?.slice(HERO_COUNT).map(tvToCard)}
               isLoading={trendingTv.isLoading}
             />
-            <MovieCarousel title="Popular" movies={popularTv.data?.results?.map(tvToCard)} isLoading={popularTv.isLoading} />
-            <MovieCarousel title="Top Rated" movies={topRatedTv.data?.results?.map(tvToCard)} isLoading={topRatedTv.isLoading} />
-            <MovieCarousel title="On The Air" movies={onTheAirTv.data?.results?.map(tvToCard)} isLoading={onTheAirTv.isLoading} />
+            <MovieCarousel title={HOME_TITLES.popular} movies={popularTv.data?.results?.map(tvToCard)} isLoading={popularTv.isLoading} />
+            <MovieCarousel title={HOME_TITLES.topRated} movies={topRatedTv.data?.results?.map(tvToCard)} isLoading={topRatedTv.isLoading} />
+            <MovieCarousel title={HOME_TITLES.onTheAir} movies={onTheAirTv.data?.results?.map(tvToCard)} isLoading={onTheAirTv.isLoading} />
           </View>
         </>
       );
@@ -166,17 +167,17 @@ export default function HomeScreen() {
         <View className="pt-6">
           <ContinueWatchingRow />
           <MovieCarousel
-            title="Trending Movies"
+            title={HOME_TITLES.trendingMovies}
             movies={trending.data?.results?.slice(HERO_COUNT)}
             isLoading={trending.isLoading}
           />
-          <MovieCarousel title="Trending Shows" movies={trendingTv.data?.results?.map(tvToCard)} isLoading={trendingTv.isLoading} />
-          <MovieCarousel title="Popular Movies" movies={popular.data?.results} isLoading={popular.isLoading} />
-          <MovieCarousel title="Popular Shows" movies={popularTv.data?.results?.map(tvToCard)} isLoading={popularTv.isLoading} />
-          <MovieCarousel title="Top Rated Movies" movies={topRated.data?.results} isLoading={topRated.isLoading} />
-          <MovieCarousel title="Top Rated Shows" movies={topRatedTv.data?.results?.map(tvToCard)} isLoading={topRatedTv.isLoading} />
-          <MovieCarousel title="Upcoming Movies" movies={upcoming.data?.results} isLoading={upcoming.isLoading} />
-          <MovieCarousel title="On The Air" movies={onTheAirTv.data?.results?.map(tvToCard)} isLoading={onTheAirTv.isLoading} />
+          <MovieCarousel title={HOME_TITLES.trendingShows} movies={trendingTv.data?.results?.map(tvToCard)} isLoading={trendingTv.isLoading} />
+          <MovieCarousel title={HOME_TITLES.popularMovies} movies={popular.data?.results} isLoading={popular.isLoading} />
+          <MovieCarousel title={HOME_TITLES.popularShows} movies={popularTv.data?.results?.map(tvToCard)} isLoading={popularTv.isLoading} />
+          <MovieCarousel title={HOME_TITLES.topRatedMovies} movies={topRated.data?.results} isLoading={topRated.isLoading} />
+          <MovieCarousel title={HOME_TITLES.topRatedShows} movies={topRatedTv.data?.results?.map(tvToCard)} isLoading={topRatedTv.isLoading} />
+          <MovieCarousel title={HOME_TITLES.upcomingMovies} movies={upcoming.data?.results} isLoading={upcoming.isLoading} />
+          <MovieCarousel title={HOME_TITLES.onTheAir} movies={onTheAirTv.data?.results?.map(tvToCard)} isLoading={onTheAirTv.isLoading} />
         </View>
       </>
     );

@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView, type WebViewProps } from 'react-native-webview';
 
+import { CHECKOUT } from '@/constants/strings';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { isPaymentSuccessUrl } from '@/lib/checkout';
 
@@ -34,7 +35,7 @@ export function CheckoutWebView({ url, onSuccess, onCancel }: CheckoutWebViewPro
             className="h-10 w-10 items-center justify-center active:opacity-70">
             <Ionicons name="close" size={26} color={Colors.text} />
           </Pressable>
-          <Text className="text-base font-bold text-white">Complete payment</Text>
+          <Text className="text-base font-bold text-white">{CHECKOUT.title}</Text>
           <View className="h-10 w-10" />
         </View>
 

@@ -3,6 +3,7 @@ import { FlatList, View } from 'react-native';
 
 import { ContinueWatchingCard } from '@/components/continue-watching-card';
 import { SectionHeader } from '@/components/section-header';
+import { CONTINUE_WATCHING } from '@/constants/strings';
 import { useContinueWatchingStore } from '@/stores/continue-watching-store';
 
 const CARD_WIDTH = 248;
@@ -20,7 +21,7 @@ export const ContinueWatchingRow = memo(function ContinueWatchingRow() {
 
   return (
     <View className="mb-7">
-      <SectionHeader title="Continue Watching" />
+      <SectionHeader title={CONTINUE_WATCHING.title} />
       <FlatList
         horizontal
         data={items}

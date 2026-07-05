@@ -29,9 +29,8 @@ export const useThemeStore = create<ThemeState>((set) => ({
 
   initialize: async () => {
     const saved = (await AsyncStorage.getItem(STORAGE_KEY)) as ThemeMode | null;
-    if (saved && ['system', 'light', 'dark'].includes(saved)) {
-      colorScheme.set(saved);
-      set({ mode: saved });
-    }
+    const mode = saved && ['system', 'light', 'dark'].includes(saved) ? saved : 'dark';
+    colorScheme.set(mode);
+    set({ mode });
   },
 }));
