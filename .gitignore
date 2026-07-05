@@ -45,5 +45,9 @@ example
 # local secrets
 .env
 
+# EAS / Play Store credentials
+play-store-key.json
+google-services.json
+
 # expo export output
 /dist

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Bingebox",
+    "name": "BingeBox",
     "slug": "Bingebox",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,8 @@
     "backgroundColor": "#0F0F0F",
     "ios": {
       "icon": "./assets/images/icon.png",
-      "bundleIdentifier": "com.mela-pvt-ltd.Bingebox"
+      "bundleIdentifier": "com.mela-pvt-ltd.Bingebox",
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
@@ -20,7 +21,12 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.melapvtltd.Bingebox"
+      "package": "com.melapvtltd.Bingebox",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "output": "static",
@@ -30,7 +36,7 @@
       [
         "onesignal-expo-plugin",
         {
-          "mode": "development"
+          "mode": "production"
         }
       ],
       "expo-router",
@@ -50,6 +56,30 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a2e34aa8-ae90-406e-93c4-db430eb0478a",
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "targetName": "OneSignalNotificationServiceExtension",
+                  "bundleIdentifier": "com.mela-pvt-ltd.Bingebox.OneSignalNotificationServiceExtension",
+                  "entitlements": {
+                    "com.apple.security.application-groups": [
+                      "group.com.mela-pvt-ltd.Bingebox.onesignal"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "router": {}
+    },
+    "owner": "shivam330"
   }
 }
