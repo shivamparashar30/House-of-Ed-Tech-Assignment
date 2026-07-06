@@ -65,7 +65,7 @@ Browse trending movies & TV shows, search across TMDB's catalog, manage watchlis
 
 ## Demo Video
 
-> [Watch the demo video](YOUR_DEMO_VIDEO_LINK_HERE)
+> [Watch the demo video](https://drive.google.com/file/d/1eJrbdFFd0pr4SapTrSzRsmeCN8zWZOZi/view?usp=sharing_HERE)
 
 ---
 
@@ -289,7 +289,7 @@ All tests are passing across stores, components, and utility modules.
 |----------|------|
 | APK Download | [Download APK](https://expo.dev/artifacts/eas/V3xybqnfOyz6MFRS1ys9q9JyAy6oSe0t3-PA5BbvreI.apk) |
 | GitHub Repository | [View Source](https://github.com/shivamparashar30/House-of-Ed-Tech-Assignment) |
-| Demo Video | [Watch Demo](YOUR_DEMO_VIDEO_LINK) |
+| Demo Video | [Watch Demo](https://drive.google.com/file/d/1eJrbdFFd0pr4SapTrSzRsmeCN8zWZOZi/view?usp=sharing) |
 | Expo Project | [View on Expo](https://expo.dev/accounts/shivam330/projects/Bingebox) |
 
 ### Build Commands
