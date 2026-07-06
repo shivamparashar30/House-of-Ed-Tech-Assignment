@@ -32,16 +32,34 @@ Browse trending movies & TV shows, search across TMDB's catalog, manage watchlis
     <td><img src="screenshots/search.jpeg" width="250"/></td>
   </tr>
   <tr>
+    <td align="center"><b>Search - Trending</b></td>
+    <td align="center"><b>TV Detail</b></td>
+    <td align="center"><b>Library</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/search-trending.jpeg" width="250"/></td>
+    <td><img src="screenshots/tv-detail.jpeg" width="250"/></td>
+    <td><img src="screenshots/library.jpeg" width="250"/></td>
+  </tr>
+  <tr>
     <td align="center"><b>Profile</b></td>
-    <td align="center" colspan="2"><b>Video Player</b></td>
+    <td align="center"><b>Paywall</b></td>
+    <td align="center"><b>Subscription Active</b></td>
   </tr>
   <tr>
     <td><img src="screenshots/profile.jpeg" width="250"/></td>
+    <td><img src="screenshots/paywall.jpeg" width="250"/></td>
+    <td><img src="screenshots/subscription-active.jpeg" width="250"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Payment Success</b></td>
+    <td align="center" colspan="2"><b>Video Player</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/payment-success.jpeg" width="250"/></td>
     <td colspan="2"><img src="screenshots/player.jpeg" width="520"/></td>
   </tr>
 </table>
-
-> More screenshots: Movie Details, Watchlist, Collections, Subscription, Notifications, Light Mode — coming soon.
 
 ---
 
@@ -194,7 +212,7 @@ Presentational components memoized with `React.memo()`. Business logic lives in 
 
 ```bash
 # 1. Clone the repository
-git clone YOUR_GITHUB_REPO_URL
+git clone https://github.com/shivamparashar30/House-of-Ed-Tech-Assignment
 cd BingeBox
 
 # 2. Use correct Node version
@@ -269,8 +287,8 @@ All tests are passing across stores, components, and utility modules.
 
 | Resource | Link |
 |----------|------|
-| APK Download | [Download APK](YOUR_APK_DOWNLOAD_LINK) |
-| GitHub Repository | [View Source](YOUR_GITHUB_REPO_URL) |
+| APK Download | [Download APK](https://expo.dev/artifacts/eas/V3xybqnfOyz6MFRS1ys9q9JyAy6oSe0t3-PA5BbvreI.apk) |
+| GitHub Repository | [View Source](https://github.com/shivamparashar30/House-of-Ed-Tech-Assignment) |
 | Demo Video | [Watch Demo](YOUR_DEMO_VIDEO_LINK) |
 | Expo Project | [View on Expo](https://expo.dev/accounts/shivam330/projects/Bingebox) |
 
