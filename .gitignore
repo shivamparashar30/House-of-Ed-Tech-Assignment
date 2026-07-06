@@ -49,5 +49,8 @@ example
 play-store-key.json
 google-services.json
 
+# test coverage reports
+coverage/
+
 # expo export output
 /dist
